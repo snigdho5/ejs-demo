@@ -7,11 +7,11 @@ app.set('view engine', 'ejs');
 
 app.get('/', function (req, res) {
     var mascots = [
-        { name: 'Sammy', organization: "DigitalOcean", birth_year: 2012 },
-        { name: 'Tux', organization: "Linux", birth_year: 1996 },
-        { name: 'Moby Dock', organization: "Docker", birth_year: 2013 }
+        { name: 'John', organization: "Java", birth_year: 2016 },
+        { name: 'Smith', organization: "Linux", birth_year: 1995 },
+        { name: 'Coby', organization: "Docker", birth_year: 2014 }
     ];
-    var tagline = "No programming concept is complete without a cute animal mascot.";
+    var tagline = "Hello World!";
 
     res.render('pages/index', {
         mascots: mascots,
