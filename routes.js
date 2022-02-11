@@ -26,16 +26,16 @@ router.get('/about', function (req, res) {
     res.render('pages/about');
 });
 
-// router.route('/book')
-//     .get(function (req, res) {
-//         res.send('Get a random book');
-//     })
-//     .post(function (req, res) {
-//         res.send('Add a book');
-//     })
-//     .put(function (req, res) {
-//         res.send('Update the book');
-//     });
+router.route('/book')
+    .get(function (req, res) {
+        res.send('Get a random book');
+    })
+    .post(function (req, res) {
+        res.send('Add a book');
+    })
+    .put(function (req, res) {
+        res.send('Update the book');
+    });
 
 
 module.exports = router;
