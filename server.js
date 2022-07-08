@@ -5,8 +5,15 @@ const port = 3000;
 // set the view engine to ejs
 app.set('view engine', 'ejs');
 
-var routes = require('./routes.js');
-app.use('/', routes);
+var routes = require('./routes/routes.js');
+var web = require('./routes/web.js');
+var api = require('./routes/api.js');
+
+
+app.use('/routes', routes);
+// app.use('/', web);
+// app.use('/api', api);
+
 
 
 
