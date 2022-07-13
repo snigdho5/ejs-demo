@@ -8,17 +8,19 @@ const morgan = require("morgan");
 
 //database
 const mongoose = require("mongoose");
-const dbURI = "mongodb://localhost:27017";
+const dbURI = "mongodb://localhost:27017/ukfitness";
 app.use(express.json());
 
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
+mongoose.Promise = global.Promise;
 
 db.on("error", (err) => {
   console.error(err);
 });
 db.once("open", () => {
-  console.log("DB started successfully");
+  // console.log(db);
+  console.log(" DB started successfully");
 });
 
 // set the view engine to ejs
@@ -29,6 +31,12 @@ app.use(helmet());
 // using bodyParser to parse JSON bodies into JS objects
 app.use(bodyParser.json());
 // enabling CORS for all requests
+
+// var corsOptions = {
+//   origin: "http://localhost:3000"
+// };
+// app.use(cors(corsOptions));
+
 app.use(cors());
 // adding morgan to log HTTP requests
 app.use(morgan("combined"));
@@ -43,6 +51,7 @@ app.use("/", web);
 app.use("/api", api);
 app.use("/routes", routes); //test
 
+
 // catch 404 and forward to error handler
 // app.use(function (req, res, next) {
 //   var err = new Error("Not Found");
@@ -50,4 +59,5 @@ app.use("/routes", routes); //test
 //   next(err);
 // });
 
+//snigdho upadhyay
 app.listen(port, () => console.log(`App listening on port ${port}!`));
