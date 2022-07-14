@@ -49,6 +49,14 @@ const model = mongoose.Schema({
     type: String,
     required: true,
   },
+  created_dtime: {
+    type: String,
+    required: true,
+  },
+  last_login: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = new mongoose.model("Users", model);

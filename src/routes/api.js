@@ -4,16 +4,13 @@ var moment = require("moment");
 const mongoose = require("mongoose");
 const db = mongoose.connection;
 const Users = require("../models/users");
+// const helper = require("../helpers/helper");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const tokenSecret = "a2sd#Fs43d4G3524Kh";
 const rounds = 10;
-
-// middleware that is specific to this router
-// router.use(function timeLog(req, res, next) {
-//   console.log("Time: ", Date.now());
-//   next();
-// });
+const dateTime = moment().format("YYYY-MM-DD h:mm:ss");
+const auth = require("../middlewares/auth");
 
 //test
 router.post("/add-users", (req, res) => {
@@ -81,37 +78,51 @@ router.post("/signup", (req, res) => {
       });
     } else {
       // const token = generateToken(req.body);
-      const newUser = Users({
-        email: req.body.email,
-        password: hash,
-        token: "na",
-        title: req.body.title,
-        name: req.body.name,
-        age: req.body.age,
-        weight: req.body.weight,
-        height: req.body.height,
-        country: req.body.country,
-        country_code: req.body.country_code,
-        country: req.body.country,
-        goal: req.body.goal,
-        hear_from: req.body.hear_from,
-      });
-      newUser
-        .save()
-        .then((user) => {
-          res.status(200).json({
-            status: "1",
-            message: "Added!",
-            respdata: user,
+
+      Users.findOne({ email: req.body.email }).then((user) => {
+        if (!user) {
+          const newUser = Users({
+            email: req.body.email,
+            password: hash,
+            token: "na",
+            title: req.body.title,
+            name: req.body.name,
+            age: req.body.age,
+            weight: req.body.weight,
+            height: req.body.height,
+            country: req.body.country,
+            country_code: req.body.country_code,
+            country: req.body.country,
+            goal: req.body.goal,
+            hear_from: req.body.hear_from,
+            last_login: "na",
+            created_dtime: dateTime,
           });
-        })
-        .catch((error) => {
+
+          newUser
+            .save()
+            .then((user) => {
+              res.status(200).json({
+                status: "1",
+                message: "Added!",
+                respdata: user,
+              });
+            })
+            .catch((error) => {
+              res.status(400).json({
+                status: "0",
+                message: "Error!",
+                respdata: error,
+              });
+            });
+        } else {
           res.status(400).json({
             status: "0",
-            message: "Error!",
-            respdata: error,
+            message: "User already exists!",
+            respdata: {},
           });
-        });
+        }
+      });
     }
   });
 });
@@ -133,11 +144,28 @@ router.post("/login", (req, res) => {
             respdata: error,
           });
         } else if (match) {
-          Users.updateOne({ _id: user._id }, { $set: { token: "na" } });
+          // delete user.token;
+          // Users.updateOne({ _id: user._id }, { $set: { token: "na" } });
+
+          const userToken = {
+            userId: user._id,
+            email: user.email,
+            password: user.password,
+            title: user.title,
+            name: user.name,
+            age: user.age,
+            weight: user.weight,
+            height: user.height,
+            country: user.country,
+            country_code: user.country_code,
+            country: user.country,
+            goal: user.goal,
+            hear_from: user.hear_from,
+          };
 
           Users.findOneAndUpdate(
             { _id: user._id },
-            { $set: { token: generateToken(user) } },
+            { $set: { token: generateToken(userToken), last_login: dateTime } },
             { upsert: true },
             function (err, doc) {
               if (err) {
@@ -162,6 +190,15 @@ router.post("/login", (req, res) => {
         }
       });
     }
+  });
+});
+
+router.get("/test", auth.isAuthorized, function (req, res) {
+  console.log("test: ");
+  res.status(200).json({
+    status: "0",
+    message: "test",
+    respdata: {},
   });
 });
 
