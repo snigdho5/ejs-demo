@@ -12,26 +12,20 @@ module.exports.isAuthorized = (req, res, next) => {
       const decodedToken = jwt.verify(token, tokenSecret);
       const email = decodedToken.data.email;
 
-      // console.log(req.body.user_id);
-
       Users.findOne({ email: email }).then((user) => {
-        console.log(user._id);
-        console.log(req.body.user_id);
-        if (req.body.user_id && req.body.user_id !== user._id) {
+        if (req.body.user_id && req.body.user_id !== user._id.toString()) {
           res.status(401).json({
             status: "0",
-            message: "Invalid token / user_id!",
+            message: "Invalid user_id!",
             respdata: {},
           });
           // throw "Invalid user ID";
         } else {
-          console.log("userId: " + email);
           next();
         }
       });
     }
   } catch {
-    console.log("hfghgf: ");
     res.status(401).json({
       status: "0",
       message: "Invalid token!",
