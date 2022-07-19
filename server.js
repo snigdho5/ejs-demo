@@ -6,6 +6,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 
+
 //database
 const mongoose = require("mongoose");
 const dbURI = "mongodb+srv://snigdhoU1:MdzrUIxkbf0CGPhW@cluster0.vwhnn.mongodb.net/ukfitness";
@@ -31,7 +32,9 @@ app.set("view engine", "ejs");
 // adding Helmet to enhance your API's security
 app.use(helmet());
 // using bodyParser to parse JSON bodies into JS objects
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
+app.use(bodyParser.json({limit: "50mb"}));
+app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
 // enabling CORS for all requests
 
 // var corsOptions = {

@@ -3,6 +3,9 @@ var router = express.Router();
 var moment = require("moment");
 const mongoose = require("mongoose");
 const db = mongoose.connection;
+const http = require("http");
+const path = require("path");
+const fs = require("fs");
 const Users = require("../models/userModel");
 // const helper = require("../helpers/helper");
 const bcrypt = require("bcrypt");
@@ -16,6 +19,24 @@ const { check, validationResult } = require("express-validator");
 //functions
 function generateToken(user) {
   return jwt.sign({ data: user }, tokenSecret, { expiresIn: "24h" });
+}
+
+function decodeBase64Image(dataString) {
+  var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
+
+  response = {};
+  if (matches) {
+    if (matches.length !== 3) {
+      return new Error("Invalid input string");
+    }
+
+    response.type = matches[1];
+    response.data = new Buffer(matches[2], "base64");
+  }else{
+    response = "";
+  }
+
+  return response;
 }
 
 //methods
@@ -32,7 +53,6 @@ exports.getUsers = async function (req, res, next) {
 };
 
 exports.signUp = async function (req, res, next) {
-  
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({
@@ -70,6 +90,7 @@ exports.signUp = async function (req, res, next) {
             hear_from: req.body.hear_from,
             last_login: "na",
             created_dtime: dateTime,
+            image: "na",
           });
 
           newUser
@@ -100,7 +121,7 @@ exports.signUp = async function (req, res, next) {
   });
 };
 
-exports.login = async function (req, res, next) {
+exports.getLogin = async function (req, res, next) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({
@@ -171,6 +192,151 @@ exports.login = async function (req, res, next) {
           });
         }
       });
+    }
+  });
+};
+
+exports.getProfile = async function (req, res, next) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      status: "0",
+      message: "Validation error!",
+      respdata: errors.array(),
+    });
+  }
+
+  Users.findOne({ _id: req.body.user_id }).then((user) => {
+    if (!user) {
+      res.status(400).json({
+        status: "0",
+        message: "User does not exist!",
+        respdata: {},
+      });
+    } else {
+      // console.log('%s %s %s', req.method, req.url, req.path);
+      user.image = req.baseUrl + "/images/" + "test.jpg";
+      res.status(400).json({
+        status: "1",
+        message: "Detalis Found!",
+        respdata: user,
+      });
+    }
+  });
+};
+
+exports.editProfile = async function (req, res, next) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      status: "0",
+      message: "Validation error!",
+      respdata: errors.array(),
+    });
+  }
+
+  Users.findOne({ _id: req.body.user_id }).then((user) => {
+    if (!user)
+      res.status(404).json({
+        status: "0",
+        message: "User not found!",
+        respdata: {},
+      });
+    else {
+      // Users.updateOne({ _id: user._id }, { $set: updData });
+
+      var updData = {
+        // email: req.body.email,
+        password: req.body.password,
+        title: req.body.title,
+        name: req.body.name,
+        age: req.body.age,
+        weight: req.body.weight,
+        height: req.body.height,
+        country: req.body.country,
+        country_code: req.body.country_code,
+        country: req.body.country,
+        goal: req.body.goal,
+        hear_from: req.body.hear_from,
+        // last_login: dateTime,
+      };
+      Users.findOneAndUpdate(
+        { _id: req.body.user_id },
+        { $set: updData },
+        { upsert: true },
+        function (err, doc) {
+          if (err) {
+            throw err;
+          } else {
+            Users.findOne({ _id: req.body.user_id }).then((user) => {
+              res.status(200).json({
+                status: "1",
+                message: "Successfully updated!",
+                respdata: user,
+              });
+            });
+          }
+        }
+      );
+    }
+  });
+};
+
+exports.uploadImage = async function (req, res, next) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      status: "0",
+      message: "Validation error!",
+      respdata: errors.array(),
+    });
+  }
+
+  Users.findOne({ _id: req.body.user_id }).then((user) => {
+    if (!user)
+      res.status(404).json({
+        status: "0",
+        message: "User not found!",
+        respdata: {},
+      });
+    else {
+      var decodedImg = decodeBase64Image(req.body.img_base64);
+      // console.log(decodedImg);
+      if (decodedImg != "") {
+        var imageBuffer = decodedImg.data;
+        var type = decodedImg.type;
+        var extension = mime.extension(type);
+        var fileName = "image." + extension;
+        try {
+          fs.writeFileSync(".tmp/uploads/" + fileName, imageBuffer, "utf8");
+          // fs.readFileSync(img_base64, {encoding: 'base64'});
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      var updData = {
+        // email: req.body.email,
+        image: req.body.img_base64,
+      };
+      Users.findOneAndUpdate(
+        { _id: req.body.user_id },
+        { $set: updData },
+        { upsert: true },
+        function (err, doc) {
+          if (err) {
+            throw err;
+          } else {
+            Users.findOne({ _id: req.body.user_id }).then((user) => {
+              res.status(200).json({
+                status: "1",
+                message: "Successful!",
+                respdata: user,
+              });
+            });
+          }
+        }
+      );
     }
   });
 };
