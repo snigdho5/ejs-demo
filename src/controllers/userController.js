@@ -6,7 +6,9 @@ const db = mongoose.connection;
 const http = require("http");
 const path = require("path");
 const fs = require("fs");
+const mime = require("mime");
 const Users = require("../models/userModel");
+const AppSettings = require("../models/appSettings");
 // const helper = require("../helpers/helper");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -23,8 +25,8 @@ function generateToken(user) {
 
 function decodeBase64Image(dataString) {
   var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
-
-  response = {};
+    response = {};
+  console.log(matches);
   if (matches) {
     if (matches.length !== 3) {
       return new Error("Invalid input string");
@@ -32,7 +34,7 @@ function decodeBase64Image(dataString) {
 
     response.type = matches[1];
     response.data = new Buffer(matches[2], "base64");
-  }else{
+  } else {
     response = "";
   }
 
@@ -301,14 +303,15 @@ exports.uploadImage = async function (req, res, next) {
       });
     else {
       var decodedImg = decodeBase64Image(req.body.img_base64);
-      // console.log(decodedImg);
+      console.log("sss:");
+      console.log(decodedImg);
       if (decodedImg != "") {
         var imageBuffer = decodedImg.data;
         var type = decodedImg.type;
         var extension = mime.extension(type);
         var fileName = "image." + extension;
         try {
-          fs.writeFileSync(".tmp/uploads/" + fileName, imageBuffer, "utf8");
+          fs.writeFileSync("../uploads/images" + fileName, imageBuffer, "utf8");
           // fs.readFileSync(img_base64, {encoding: 'base64'});
         } catch (err) {
           console.error(err);
@@ -317,7 +320,7 @@ exports.uploadImage = async function (req, res, next) {
 
       var updData = {
         // email: req.body.email,
-        image: req.body.img_base64,
+        image: "nn",
       };
       Users.findOneAndUpdate(
         { _id: req.body.user_id },
@@ -337,6 +340,43 @@ exports.uploadImage = async function (req, res, next) {
           }
         }
       );
+    }
+  });
+};
+
+exports.getSetting = async function (req, res, next) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      status: "0",
+      message: "Validation error!",
+      respdata: errors.array(),
+    });
+  }
+
+  Users.findOne({ _id: req.body.user_id }).then((user) => {
+    if (!user) {
+      res.status(400).json({
+        status: "0",
+        message: "User does not exist!",
+        respdata: {},
+      });
+    } else {
+      AppSettings.findOne({ _id: "62dfc4e9c81e7f67a9ad426d" }).then((sett) => {
+        if (!sett) {
+          res.status(400).json({
+            status: "0",
+            message: "Settings not found!",
+            respdata: {},
+          });
+        } else {
+          res.status(400).json({
+            status: "1",
+            message: "Detalis Found!",
+            respdata: sett,
+          });
+        }
+      });
     }
   });
 };

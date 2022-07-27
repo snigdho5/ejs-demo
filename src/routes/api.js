@@ -184,12 +184,48 @@ router.post(
   ],
   UserController.uploadImage
 );
+
+
+router.post(
+  "/settings",
+  auth.isAuthorized,
+  [
+    check("user_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  UserController.getSetting
+);
+
 //test
 router.post("/add-users", (req, res) => {
   // console.log(req.body);
 
   var data = req.body;
   db.collection("users").insertMany(data, function (err, result) {
+    if (err) {
+      res.status(400).json({
+        status: "1",
+        message: "Not added!",
+        respdata: err,
+      });
+    } else {
+      res.status(200).json({
+        status: "1",
+        message: "Added!",
+        respdata: result,
+      });
+    }
+  });
+});
+
+router.post("/add-setting", (req, res) => {
+  // console.log(req.body);
+
+  var data = req.body;
+  db.collection("app_settings").insertOne(data, function (err, result) {
     if (err) {
       res.status(400).json({
         status: "1",
