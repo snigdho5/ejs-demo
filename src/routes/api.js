@@ -10,9 +10,10 @@ const { check, validationResult } = require("express-validator");
 const rounds = 10;
 //controllers, models, services, helpers
 const auth = require("../middlewares/auth");
-const Users = require("../models/userModel");
 const UserController = require("../controllers/userController");
 const OthersController = require("../controllers/othersController");
+const CategoryController = require("../controllers/categoryController");
+const SubCategoryController = require("../controllers/subCategoryController");
 // const helper = require("../helpers/helper");
 //others
 const dateTime = moment().format("YYYY-MM-DD h:mm:ss");
@@ -185,7 +186,6 @@ router.post(
   UserController.uploadImage
 );
 
-
 router.post(
   "/settings",
   auth.isAuthorized,
@@ -196,7 +196,139 @@ router.post(
       .trim()
       .escape(),
   ],
-  UserController.getSetting
+  OthersController.getSetting
+);
+
+router.post(
+  "/logout",
+  auth.isAuthorized,
+  [
+    check("user_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  UserController.getLogout
+);
+
+router.post(
+  "/change-password",
+  auth.isAuthorized,
+  [
+    check("user_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  UserController.changePassword
+);
+
+//category
+
+router.get("/categories", auth.isAuthorized, CategoryController.getData);
+
+router.post(
+  "/view-category",
+  auth.isAuthorized,
+  [
+    check("category_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  CategoryController.viewData
+);
+
+router.post(
+  "/add-category",
+  auth.isAuthorized,
+  [
+    check("category_name", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  CategoryController.addData
+);
+
+router.post(
+  "/edit-category",
+  auth.isAuthorized,
+  [
+    check("category_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("category_name", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  CategoryController.editData
+);
+
+//sub category
+
+router.get("/sub-categories", auth.isAuthorized, SubCategoryController.getData);
+
+router.post(
+  "/view-sub-category",
+  auth.isAuthorized,
+  [
+    check("sub_category_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  SubCategoryController.viewData
+);
+
+router.post(
+  "/add-sub-category",
+  auth.isAuthorized,
+  [
+    check("category_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("sub_category_name", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  SubCategoryController.addData
+);
+
+router.post(
+  "/edit-sub-category",
+  auth.isAuthorized,
+  [
+    check("sub_category_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("category_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("sub_category_name", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  SubCategoryController.editData
 );
 
 //test

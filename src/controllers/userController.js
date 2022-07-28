@@ -8,7 +8,6 @@ const path = require("path");
 const fs = require("fs");
 const mime = require("mime");
 const Users = require("../models/userModel");
-const AppSettings = require("../models/appSettings");
 // const helper = require("../helpers/helper");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -247,39 +246,41 @@ exports.editProfile = async function (req, res, next) {
     else {
       // Users.updateOne({ _id: user._id }, { $set: updData });
 
-      var updData = {
-        // email: req.body.email,
-        password: req.body.password,
-        title: req.body.title,
-        name: req.body.name,
-        age: req.body.age,
-        weight: req.body.weight,
-        height: req.body.height,
-        country: req.body.country,
-        country_code: req.body.country_code,
-        country: req.body.country,
-        goal: req.body.goal,
-        hear_from: req.body.hear_from,
-        // last_login: dateTime,
-      };
-      Users.findOneAndUpdate(
-        { _id: req.body.user_id },
-        { $set: updData },
-        { upsert: true },
-        function (err, doc) {
-          if (err) {
-            throw err;
-          } else {
-            Users.findOne({ _id: req.body.user_id }).then((user) => {
-              res.status(200).json({
-                status: "1",
-                message: "Successfully updated!",
-                respdata: user,
+      bcrypt.hash(req.body.password, rounds, (error, hash) => {
+        var updData = {
+          // email: req.body.email,
+          password: hash,
+          title: req.body.title,
+          name: req.body.name,
+          age: req.body.age,
+          weight: req.body.weight,
+          height: req.body.height,
+          country: req.body.country,
+          country_code: req.body.country_code,
+          country: req.body.country,
+          goal: req.body.goal,
+          hear_from: req.body.hear_from,
+          // last_login: dateTime,
+        };
+        Users.findOneAndUpdate(
+          { _id: req.body.user_id },
+          { $set: updData },
+          { upsert: true },
+          function (err, doc) {
+            if (err) {
+              throw err;
+            } else {
+              Users.findOne({ _id: req.body.user_id }).then((user) => {
+                res.status(200).json({
+                  status: "1",
+                  message: "Successfully updated!",
+                  respdata: user,
+                });
               });
-            });
+            }
           }
-        }
-      );
+        );
+      });
     }
   });
 };
@@ -344,7 +345,7 @@ exports.uploadImage = async function (req, res, next) {
   });
 };
 
-exports.getSetting = async function (req, res, next) {
+exports.getLogout = async function (req, res, next) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({
@@ -355,27 +356,84 @@ exports.getSetting = async function (req, res, next) {
   }
 
   Users.findOne({ _id: req.body.user_id }).then((user) => {
-    if (!user) {
-      res.status(400).json({
+    if (!user)
+      res.status(404).json({
         status: "0",
-        message: "User does not exist!",
+        message: "User not found!",
         respdata: {},
       });
-    } else {
-      AppSettings.findOne({ _id: "62dfc4e9c81e7f67a9ad426d" }).then((sett) => {
-        if (!sett) {
-          res.status(400).json({
-            status: "0",
-            message: "Settings not found!",
-            respdata: {},
-          });
-        } else {
-          res.status(400).json({
-            status: "1",
-            message: "Detalis Found!",
-            respdata: sett,
-          });
+    else {
+      // Users.updateOne({ _id: user._id }, { $set: updData });
+
+      var updData = {
+        token: "na",
+        last_logout: dateTime,
+      };
+      Users.findOneAndUpdate(
+        { _id: req.body.user_id },
+        { $set: updData },
+        { upsert: true },
+        function (err, doc) {
+          if (err) {
+            throw err;
+          } else {
+            Users.findOne({ _id: req.body.user_id }).then((user) => {
+              res.status(200).json({
+                status: "1",
+                message: "Successfully loggedout!",
+                respdata: user,
+              });
+            });
+          }
         }
+      );
+    }
+  });
+};
+
+exports.changePassword = async function (req, res, next) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      status: "0",
+      message: "Validation error!",
+      respdata: errors.array(),
+    });
+  }
+
+  Users.findOne({ _id: req.body.user_id }).then((user) => {
+    if (!user)
+      res.status(404).json({
+        status: "0",
+        message: "User not found!",
+        respdata: {},
+      });
+    else {
+      // Users.updateOne({ _id: user._id }, { $set: updData });
+
+      bcrypt.hash(req.body.new_password, rounds, (error, hash) => {
+        var updData = {
+          password: hash,
+          // last_login: dateTime,
+        };
+        Users.findOneAndUpdate(
+          { _id: req.body.user_id },
+          { $set: updData },
+          { upsert: true },
+          function (err, doc) {
+            if (err) {
+              throw err;
+            } else {
+              Users.findOne({ _id: req.body.user_id }).then((user) => {
+                res.status(200).json({
+                  status: "1",
+                  message: "Successfully updated!",
+                  respdata: user,
+                });
+              });
+            }
+          }
+        );
       });
     }
   });
