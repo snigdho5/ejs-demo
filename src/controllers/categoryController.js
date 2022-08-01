@@ -154,3 +154,43 @@ exports.editData = async function (req, res, next) {
     }
   });
 };
+
+exports.deleteData = async function (req, res, next) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      status: "0",
+      message: "Validation error!",
+      respdata: errors.array(),
+    });
+  }
+
+  Category.findOne({ _id: req.body.category_id }).then((category) => {
+    if (!category) {
+      res.status(404).json({
+        status: "0",
+        message: "Not found!",
+        respdata: {},
+      });
+    } else {
+      //delete
+      // try {
+      Category.deleteOne({ _id: req.body.category_id });
+
+      Category.remove({ _id: req.body.category_id });
+
+      // } catch (e) {
+      //   return res.status(404).json({
+      //     status: "0",
+      //     message: "Error!",
+      //     respdata: e,
+      //   });
+      // }
+      res.status(200).json({
+        status: "1",
+        message: "Deleted!",
+        respdata: category,
+      });
+    }
+  });
+};

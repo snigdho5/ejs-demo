@@ -273,6 +273,19 @@ router.post(
   CategoryController.editData
 );
 
+router.post(
+  "/delete-category",
+  auth.isAuthorized,
+  [
+    check("category_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  CategoryController.deleteData
+);
+
 //sub category
 
 router.get("/sub-categories", auth.isAuthorized, SubCategoryController.getData);
@@ -310,6 +323,76 @@ router.post(
 
 router.post(
   "/edit-sub-category",
+  auth.isAuthorized,
+  [
+    check("sub_category_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("category_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("sub_category_name", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  SubCategoryController.editData
+);
+
+router.post(
+  "/delete-sub-category",
+  auth.isAuthorized,
+  [
+    check("sub_category_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  CategoryController.deleteData
+);
+//Programme
+
+router.get("/programmes", auth.isAuthorized, SubCategoryController.getData);
+
+router.post(
+  "/view-programme",
+  auth.isAuthorized,
+  [
+    check("sub_category_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  SubCategoryController.viewData
+);
+
+router.post(
+  "/add-programme",
+  auth.isAuthorized,
+  [
+    check("category_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("sub_category_name", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  SubCategoryController.addData
+);
+
+router.post(
+  "/edit-programme",
   auth.isAuthorized,
   [
     check("sub_category_id", "This is a required field!")
