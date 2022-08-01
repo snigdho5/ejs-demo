@@ -12,8 +12,9 @@ const rounds = 10;
 const auth = require("../middlewares/auth");
 const UserController = require("../controllers/userController");
 const OthersController = require("../controllers/othersController");
-const CategoryController = require("../controllers/categoryController");
-const SubCategoryController = require("../controllers/subCategoryController");
+const CategoryController = require("../controllers/api/categoryController");
+const SubCategoryController = require("../controllers/api/subCategoryController");
+const ProgramController = require("../controllers/api/programController");
 // const helper = require("../helpers/helper");
 //others
 const dateTime = moment().format("YYYY-MM-DD h:mm:ss");
@@ -358,7 +359,7 @@ router.post(
 );
 //Programme
 
-router.get("/programmes", auth.isAuthorized, SubCategoryController.getData);
+router.get("/programmes", auth.isAuthorized, ProgramController.getData);
 
 router.post(
   "/view-programme",
@@ -370,7 +371,7 @@ router.post(
       .trim()
       .escape(),
   ],
-  SubCategoryController.viewData
+  ProgramController.viewData
 );
 
 router.post(
@@ -388,7 +389,7 @@ router.post(
       .trim()
       .escape(),
   ],
-  SubCategoryController.addData
+  ProgramController.addData
 );
 
 router.post(
@@ -411,7 +412,7 @@ router.post(
       .trim()
       .escape(),
   ],
-  SubCategoryController.editData
+  ProgramController.editData
 );
 
 //test
