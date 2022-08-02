@@ -7,7 +7,7 @@ const http = require("http");
 const path = require("path");
 const fs = require("fs");
 const mime = require("mime");
-const Category = require("../../models/api/categoryModel");
+const Program = require("../../models/api/programModel");
 // const helper = require("../helpers/helper");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -21,8 +21,8 @@ const { check, validationResult } = require("express-validator");
 exports.getData = async function (req, res, next) {
   // Validate request parameters, queries using express-validator
 
-  Category.find().then((category) => {
-    if (!category) {
+  Program.find().then((program) => {
+    if (!program) {
       res.status(404).json({
         status: "0",
         message: "Not found!",
@@ -32,7 +32,7 @@ exports.getData = async function (req, res, next) {
       res.status(200).json({
         status: "1",
         message: "Found!",
-        respdata: category,
+        respdata: program,
       });
     }
   });
@@ -48,8 +48,8 @@ exports.viewData = async function (req, res, next) {
     });
   }
 
-  Category.findOne({ _id: req.body.category_id }).then((category) => {
-    if (!category) {
+  Program.findOne({ _id: req.body.programme_id }).then((program) => {
+    if (!program) {
       res.status(404).json({
         status: "0",
         message: "Not found!",
@@ -59,7 +59,7 @@ exports.viewData = async function (req, res, next) {
       res.status(200).json({
         status: "1",
         message: "Found!",
-        respdata: category,
+        respdata: program,
       });
     }
   });
@@ -76,26 +76,26 @@ exports.addData = async function (req, res, next) {
     });
   }
 
-  Category.findOne({ name: req.body.category_name }).then((category) => {
-    if (category) {
+  Program.findOne({ name: req.body.programme_name }).then((program) => {
+    if (program) {
       res.status(404).json({
         status: "0",
         message: "Already exists!",
         respdata: {},
       });
     } else {
-      const newCat = Category({
-        name: req.body.category_name,
+      const newPro = Program({
+        name: req.body.programme_name,
         added_dtime: dateTime,
       });
 
-      newCat
+      newPro
         .save()
-        .then((category) => {
+        .then((program) => {
           res.status(200).json({
             status: "1",
             message: "Added!",
-            respdata: category,
+            respdata: program,
           });
         })
         .catch((error) => {
@@ -119,33 +119,33 @@ exports.editData = async function (req, res, next) {
     });
   }
 
-  Category.findOne({ _id: req.body.category_id }).then((category) => {
-    if (!category) {
+  Program.findOne({ _id: req.body.programme_id }).then((program) => {
+    if (!program) {
       res.status(404).json({
         status: "0",
         message: "Not found!",
         respdata: {},
       });
     } else {
-      // Category.updateOne({ _id: category._id }, { $set: updData });
+      // Program.updateOne({ _id: category._id }, { $set: updData });
 
       var updData = {
-        name: req.body.category_name,
+        name: req.body.programme_name,
         // last_login: dateTime,
       };
-      Category.findOneAndUpdate(
-        { _id: req.body.category_id },
+      Program.findOneAndUpdate(
+        { _id: req.body.programme_id },
         { $set: updData },
         { upsert: true },
         function (err, doc) {
           if (err) {
             throw err;
           } else {
-            Category.findOne({ _id: req.body.category_id }).then((category) => {
+            Program.findOne({ _id: req.body.programme_id }).then((program) => {
               res.status(200).json({
                 status: "1",
                 message: "Successfully updated!",
-                respdata: category,
+                respdata: program,
               });
             });
           }
@@ -165,8 +165,8 @@ exports.deleteData = async function (req, res, next) {
     });
   }
 
-  Category.findOne({ _id: req.body.category_id }).then((category) => {
-    if (!category) {
+  Program.findOne({ _id: req.body.programme_id }).then((program) => {
+    if (!program) {
       res.status(404).json({
         status: "0",
         message: "Not found!",
@@ -175,9 +175,9 @@ exports.deleteData = async function (req, res, next) {
     } else {
       //delete
       // try {
-      Category.deleteOne({ _id: req.body.category_id });
+        Program.deleteOne({ _id: req.body.programme_id });
 
-      Category.remove({ _id: req.body.category_id });
+        Program.remove({ _id: req.body.programme_id });
 
       // } catch (e) {
       //   return res.status(404).json({
@@ -189,7 +189,7 @@ exports.deleteData = async function (req, res, next) {
       res.status(200).json({
         status: "1",
         message: "Deleted!",
-        respdata: category,
+        respdata: program,
       });
     }
   });

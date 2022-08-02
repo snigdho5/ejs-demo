@@ -10,8 +10,8 @@ const { check, validationResult } = require("express-validator");
 const rounds = 10;
 //controllers, models, services, helpers
 const auth = require("../middlewares/auth");
-const UserController = require("../controllers/userController");
-const OthersController = require("../controllers/othersController");
+const UserController = require("../controllers/api/userController");
+const OthersController = require("../controllers/api/othersController");
 const CategoryController = require("../controllers/api/categoryController");
 const SubCategoryController = require("../controllers/api/subCategoryController");
 const ProgramController = require("../controllers/api/programController");
@@ -365,7 +365,7 @@ router.post(
   "/view-programme",
   auth.isAuthorized,
   [
-    check("sub_category_id", "This is a required field!")
+    check("programme_id", "This is a required field!")
       .not()
       .isEmpty()
       .trim()
@@ -378,12 +378,12 @@ router.post(
   "/add-programme",
   auth.isAuthorized,
   [
-    check("category_id", "This is a required field!")
+    check("programme_id", "This is a required field!")
       .not()
       .isEmpty()
       .trim()
       .escape(),
-    check("sub_category_name", "This is a required field!")
+    check("programme_name", "This is a required field!")
       .not()
       .isEmpty()
       .trim()
@@ -396,23 +396,37 @@ router.post(
   "/edit-programme",
   auth.isAuthorized,
   [
-    check("sub_category_id", "This is a required field!")
+    check("programme_id", "This is a required field!")
       .not()
       .isEmpty()
       .trim()
       .escape(),
-    check("category_id", "This is a required field!")
+    check("programme_id", "This is a required field!")
       .not()
       .isEmpty()
       .trim()
       .escape(),
-    check("sub_category_name", "This is a required field!")
+    check("programme_name", "This is a required field!")
       .not()
       .isEmpty()
       .trim()
       .escape(),
   ],
   ProgramController.editData
+);
+
+
+router.post(
+  "/delete-programme",
+  auth.isAuthorized,
+  [
+    check("programme_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  ProgramController.deleteData
 );
 
 //test

@@ -7,14 +7,14 @@ const http = require("http");
 const path = require("path");
 const fs = require("fs");
 const mime = require("mime");
-const Users = require("../models/userModel");
+const Users = require("../../models/api/userModel");
 // const helper = require("../helpers/helper");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const tokenSecret = "a2sd#Fs43d4G3524Kh";
 const rounds = 10;
 const dateTime = moment().format("YYYY-MM-DD h:mm:ss");
-const auth = require("../middlewares/auth");
+const auth = require("../../middlewares/auth");
 const { check, validationResult } = require("express-validator");
 
 //functions

@@ -16,6 +16,7 @@ const rounds = 10;
 const dateTime = moment().format("YYYY-MM-DD h:mm:ss");
 const auth = require("../../middlewares/auth");
 const { check, validationResult } = require("express-validator");
+var ObjectId = require("mongodb").ObjectId;
 
 //methods
 exports.getData = async function (req, res, next) {
@@ -175,9 +176,15 @@ exports.deleteData = async function (req, res, next) {
     } else {
       //delete
       // try {
-      Category.deleteOne({ _id: req.body.category_id });
 
-      Category.remove({ _id: req.body.category_id });
+      // console.log(ObjectId(req.body.category_id));
+
+      Category.deleteOne(
+        { _id: req.body.category_id },
+        { w: "majority", wtimeout: 100 }
+      );
+
+      // Category.remove({ _id: req.body.category_id });
 
       // } catch (e) {
       //   return res.status(404).json({
