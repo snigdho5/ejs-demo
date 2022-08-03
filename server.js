@@ -10,7 +10,7 @@ const morgan = require("morgan");
 //database
 const mongoose = require("mongoose");
 const dbURI = "mongodb+srv://snigdhoU1:MdzrUIxkbf0CGPhW@cluster0.vwhnn.mongodb.net/ukfitness";
-// const dbURI = "mongodb://localhost:27017/ukfitness";
+// const dbURI = "mongodb://61.16.131.204:27017/ukfitness";
 
 app.use(express.json());
 

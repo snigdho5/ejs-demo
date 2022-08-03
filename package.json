@@ -1,6 +1,6 @@
 {
-  "name": "ejs-demo",
-  "version": "1.0.0",
+  "name": "ukfitness-app",
+  "version": "2.1.7",
   "description": "",
   "main": "index.js",
   "scripts": {
