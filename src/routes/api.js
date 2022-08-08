@@ -15,6 +15,7 @@ const OthersController = require("../controllers/api/othersController");
 const CategoryController = require("../controllers/api/categoryController");
 const SubCategoryController = require("../controllers/api/subCategoryController");
 const ProgramController = require("../controllers/api/programController");
+const EquipmentController = require("../controllers/api/equipmentController");
 // const helper = require("../helpers/helper");
 //others
 const dateTime = moment().format("YYYY-MM-DD h:mm:ss");
@@ -357,6 +358,73 @@ router.post(
   ],
   CategoryController.deleteData
 );
+
+//Equipment
+
+router.get("/equipments", auth.isAuthorized, EquipmentController.getData);
+
+router.post(
+  "/view-equipment",
+  auth.isAuthorized,
+  [
+    check("equipment_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  EquipmentController.viewData
+);
+
+router.post(
+  "/add-equipment",
+  auth.isAuthorized,
+  [
+    check("equipment_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("equipment_name", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  EquipmentController.addData
+);
+
+router.post(
+  "/edit-equipment",
+  auth.isAuthorized,
+  [
+    check("equipment_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("equipment_name", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  EquipmentController.editData
+);
+
+router.post(
+  "/delete-equipment",
+  auth.isAuthorized,
+  [
+    check("equipment_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  EquipmentController.deleteData
+);
+
 //Programme
 
 router.get("/programmes", auth.isAuthorized, ProgramController.getData);
@@ -401,11 +469,6 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
-    check("programme_id", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
     check("programme_name", "This is a required field!")
       .not()
       .isEmpty()
@@ -414,7 +477,6 @@ router.post(
   ],
   ProgramController.editData
 );
-
 
 router.post(
   "/delete-programme",

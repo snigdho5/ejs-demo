@@ -7,7 +7,7 @@ const http = require("http");
 const path = require("path");
 const fs = require("fs");
 const mime = require("mime");
-const SubCategory = require("../../models/api/subCategoryModel");
+const Equipment = require("../../models/api/equipmentModel");
 // const helper = require("../helpers/helper");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -21,8 +21,8 @@ const { check, validationResult } = require("express-validator");
 exports.getData = async function (req, res, next) {
   // Validate request parameters, queries using express-validator
 
-  SubCategory.find().then((subcategory) => {
-    if (!subcategory) {
+  Equipment.find().then((equipment) => {
+    if (!equipment) {
       res.status(404).json({
         status: "0",
         message: "Not found!",
@@ -32,7 +32,7 @@ exports.getData = async function (req, res, next) {
       res.status(200).json({
         status: "1",
         message: "Found!",
-        respdata: subcategory,
+        respdata: equipment,
       });
     }
   });
@@ -48,8 +48,8 @@ exports.viewData = async function (req, res, next) {
     });
   }
 
-  SubCategory.findOne({ _id: req.body.sub_category_id }).then((subcategory) => {
-    if (!subcategory) {
+  Equipment.findOne({ _id: req.body.sub_category_id }).then((equipment) => {
+    if (!equipment) {
       res.status(404).json({
         status: "0",
         message: "Not found!",
@@ -59,7 +59,7 @@ exports.viewData = async function (req, res, next) {
       res.status(200).json({
         status: "1",
         message: "Found!",
-        respdata: subcategory,
+        respdata: equipment,
       });
     }
   });
@@ -76,16 +76,16 @@ exports.addData = async function (req, res, next) {
     });
   }
 
-  SubCategory.findOne({ name: req.body.sub_category_name }).then(
-    (subcategory) => {
-      if (subcategory) {
+  Equipment.findOne({ name: req.body.sub_category_name }).then(
+    (equipment) => {
+      if (equipment) {
         res.status(404).json({
           status: "0",
           message: "Already exists!",
           respdata: {},
         });
       } else {
-        const newCat = SubCategory({
+        const newCat = Equipment({
           category_id: req.body.category_id,
           name: req.body.sub_category_name,
           added_dtime: dateTime,
@@ -93,11 +93,11 @@ exports.addData = async function (req, res, next) {
 
         newCat
           .save()
-          .then((subcategory) => {
+          .then((equipment) => {
             res.status(200).json({
               status: "1",
               message: "Added!",
-              respdata: subcategory,
+              respdata: equipment,
             });
           })
           .catch((error) => {
@@ -122,8 +122,8 @@ exports.editData = async function (req, res, next) {
     });
   }
 
-  SubCategory.findOne({ _id: req.body.sub_category_id }).then((subcategory) => {
-    if (!subcategory) {
+  Equipment.findOne({ _id: req.body.sub_category_id }).then((equipment) => {
+    if (!equipment) {
       res.status(404).json({
         status: "0",
         message: "Not found!",
@@ -136,7 +136,7 @@ exports.editData = async function (req, res, next) {
         name: req.body.sub_category_name,
         // last_login: dateTime,
       };
-      SubCategory.findOneAndUpdate(
+      Equipment.findOneAndUpdate(
         { _id: req.body.sub_category_id },
         { $set: updData },
         { upsert: true },
@@ -144,12 +144,12 @@ exports.editData = async function (req, res, next) {
           if (err) {
             throw err;
           } else {
-            SubCategory.findOne({ _id: req.body.sub_category_id }).then(
-              (subcategory) => {
+            Equipment.findOne({ _id: req.body.sub_category_id }).then(
+              (equipment) => {
                 res.status(200).json({
                   status: "1",
                   message: "Successfully updated!",
-                  respdata: subcategory,
+                  respdata: equipment,
                 });
               }
             );
@@ -170,8 +170,8 @@ exports.deleteData = async function (req, res, next) {
     });
   }
 
-  SubCategory.findOne({ _id: req.body.sub_category_id }).then((subcategory) => {
-    if (!subcategory) {
+  Equipment.findOne({ _id: req.body.sub_category_id }).then((equipment) => {
+    if (!equipment) {
       res.status(404).json({
         status: "0",
         message: "Not found!",
@@ -180,9 +180,9 @@ exports.deleteData = async function (req, res, next) {
     } else {
       //delete
       // try {
-      SubCategory.deleteOne({ _id: req.body.sub_category_id });
+      Equipment.deleteOne({ _id: req.body.sub_category_id });
 
-      SubCategory.remove({ _id: req.body.sub_category_id });
+      Equipment.remove({ _id: req.body.sub_category_id });
 
       // } catch (e) {
       //   return res.status(404).json({
@@ -194,7 +194,7 @@ exports.deleteData = async function (req, res, next) {
       res.status(200).json({
         status: "1",
         message: "Deleted!",
-        respdata: subcategory,
+        respdata: equipment,
       });
     }
   });
