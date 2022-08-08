@@ -246,10 +246,10 @@ exports.editProfile = async function (req, res, next) {
     else {
       // Users.updateOne({ _id: user._id }, { $set: updData });
 
-      bcrypt.hash(req.body.password, rounds, (error, hash) => {
+      // bcrypt.hash(req.body.password, rounds, (error, hash) => {
         var updData = {
           // email: req.body.email,
-          password: hash,
+          // password: hash,
           title: req.body.title,
           name: req.body.name,
           age: req.body.age,
@@ -280,7 +280,7 @@ exports.editProfile = async function (req, res, next) {
             }
           }
         );
-      });
+      // });
     }
   });
 };

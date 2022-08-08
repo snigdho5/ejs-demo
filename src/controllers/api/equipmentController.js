@@ -48,7 +48,7 @@ exports.viewData = async function (req, res, next) {
     });
   }
 
-  Equipment.findOne({ _id: req.body.sub_category_id }).then((equipment) => {
+  Equipment.findOne({ _id: req.body.equipment_id }).then((equipment) => {
     if (!equipment) {
       res.status(404).json({
         status: "0",
@@ -76,40 +76,37 @@ exports.addData = async function (req, res, next) {
     });
   }
 
-  Equipment.findOne({ name: req.body.sub_category_name }).then(
-    (equipment) => {
-      if (equipment) {
-        res.status(404).json({
-          status: "0",
-          message: "Already exists!",
-          respdata: {},
-        });
-      } else {
-        const newCat = Equipment({
-          category_id: req.body.category_id,
-          name: req.body.sub_category_name,
-          added_dtime: dateTime,
-        });
+  Equipment.findOne({ name: req.body.equipment_name }).then((equipment) => {
+    if (equipment) {
+      res.status(404).json({
+        status: "0",
+        message: "Already exists!",
+        respdata: {},
+      });
+    } else {
+      const newCat = Equipment({
+        name: req.body.equipment_name,
+        added_dtime: dateTime,
+      });
 
-        newCat
-          .save()
-          .then((equipment) => {
-            res.status(200).json({
-              status: "1",
-              message: "Added!",
-              respdata: equipment,
-            });
-          })
-          .catch((error) => {
-            res.status(400).json({
-              status: "0",
-              message: "Error!",
-              respdata: error,
-            });
+      newCat
+        .save()
+        .then((equipment) => {
+          res.status(200).json({
+            status: "1",
+            message: "Added!",
+            respdata: equipment,
           });
-      }
+        })
+        .catch((error) => {
+          res.status(400).json({
+            status: "0",
+            message: "Error!",
+            respdata: error,
+          });
+        });
     }
-  );
+  });
 };
 
 exports.editData = async function (req, res, next) {
@@ -122,7 +119,7 @@ exports.editData = async function (req, res, next) {
     });
   }
 
-  Equipment.findOne({ _id: req.body.sub_category_id }).then((equipment) => {
+  Equipment.findOne({ _id: req.body.equipment_id }).then((equipment) => {
     if (!equipment) {
       res.status(404).json({
         status: "0",
@@ -133,18 +130,18 @@ exports.editData = async function (req, res, next) {
       // Category.updateOne({ _id: category._id }, { $set: updData });
 
       var updData = {
-        name: req.body.sub_category_name,
+        name: req.body.equipment_name,
         // last_login: dateTime,
       };
       Equipment.findOneAndUpdate(
-        { _id: req.body.sub_category_id },
+        { _id: req.body.equipment_id },
         { $set: updData },
         { upsert: true },
         function (err, doc) {
           if (err) {
             throw err;
           } else {
-            Equipment.findOne({ _id: req.body.sub_category_id }).then(
+            Equipment.findOne({ _id: req.body.equipment_id }).then(
               (equipment) => {
                 res.status(200).json({
                   status: "1",
@@ -170,7 +167,7 @@ exports.deleteData = async function (req, res, next) {
     });
   }
 
-  Equipment.findOne({ _id: req.body.sub_category_id }).then((equipment) => {
+  Equipment.findOne({ _id: req.body.equipment_id }).then((equipment) => {
     if (!equipment) {
       res.status(404).json({
         status: "0",
@@ -180,9 +177,9 @@ exports.deleteData = async function (req, res, next) {
     } else {
       //delete
       // try {
-      Equipment.deleteOne({ _id: req.body.sub_category_id });
+      Equipment.deleteOne({ _id: req.body.equipment_id });
 
-      Equipment.remove({ _id: req.body.sub_category_id });
+      Equipment.remove({ _id: req.body.equipment_id });
 
       // } catch (e) {
       //   return res.status(404).json({

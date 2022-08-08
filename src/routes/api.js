@@ -124,12 +124,12 @@ router.post(
       .trim()
       .escape(),
     // check("email", "Email length should be 10 to 30 characters!").isEmail().isLength({ min: 10, max: 30 }),
-    check("password", "Password length should be 8 to 10 characters!").isLength(
-      {
-        min: 8,
-        max: 10,
-      }
-    ),
+    // check("password", "Password length should be 8 to 10 characters!").isLength(
+    //   {
+    //     min: 8,
+    //     max: 10,
+    //   }
+    // ),
     check("title", "This is a required field!").not().isEmpty().trim().escape(),
     check("name", "This is a required field!").not().isEmpty().trim().escape(),
     check("age", "This is a required field!")
@@ -380,11 +380,6 @@ router.post(
   "/add-equipment",
   auth.isAuthorized,
   [
-    check("equipment_id", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
     check("equipment_name", "This is a required field!")
       .not()
       .isEmpty()
