@@ -223,6 +223,16 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
+    check("old_password", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("new_password", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
   ],
   UserController.changePassword
 );
@@ -365,6 +375,67 @@ router.get("/equipments", auth.isAuthorized, EquipmentController.getData);
 
 router.post(
   "/view-equipment",
+  auth.isAuthorized,
+  [
+    check("equipment_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  EquipmentController.viewData
+);
+
+router.post(
+  "/add-equipment",
+  auth.isAuthorized,
+  [
+    check("equipment_name", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  EquipmentController.addData
+);
+
+router.post(
+  "/edit-equipment",
+  auth.isAuthorized,
+  [
+    check("equipment_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("equipment_name", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  EquipmentController.editData
+);
+
+router.post(
+  "/delete-equipment",
+  auth.isAuthorized,
+  [
+    check("equipment_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  EquipmentController.deleteData
+);
+
+//Exercise
+
+router.get("/exercises", auth.isAuthorized, EquipmentController.getData);
+
+router.post(
+  "/view-exercise",
   auth.isAuthorized,
   [
     check("equipment_id", "This is a required field!")

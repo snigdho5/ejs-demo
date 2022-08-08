@@ -247,39 +247,39 @@ exports.editProfile = async function (req, res, next) {
       // Users.updateOne({ _id: user._id }, { $set: updData });
 
       // bcrypt.hash(req.body.password, rounds, (error, hash) => {
-        var updData = {
-          // email: req.body.email,
-          // password: hash,
-          title: req.body.title,
-          name: req.body.name,
-          age: req.body.age,
-          weight: req.body.weight,
-          height: req.body.height,
-          country: req.body.country,
-          country_code: req.body.country_code,
-          country: req.body.country,
-          goal: req.body.goal,
-          hear_from: req.body.hear_from,
-          // last_login: dateTime,
-        };
-        Users.findOneAndUpdate(
-          { _id: req.body.user_id },
-          { $set: updData },
-          { upsert: true },
-          function (err, doc) {
-            if (err) {
-              throw err;
-            } else {
-              Users.findOne({ _id: req.body.user_id }).then((user) => {
-                res.status(200).json({
-                  status: "1",
-                  message: "Successfully updated!",
-                  respdata: user,
-                });
+      var updData = {
+        // email: req.body.email,
+        // password: hash,
+        title: req.body.title,
+        name: req.body.name,
+        age: req.body.age,
+        weight: req.body.weight,
+        height: req.body.height,
+        country: req.body.country,
+        country_code: req.body.country_code,
+        country: req.body.country,
+        goal: req.body.goal,
+        hear_from: req.body.hear_from,
+        // last_login: dateTime,
+      };
+      Users.findOneAndUpdate(
+        { _id: req.body.user_id },
+        { $set: updData },
+        { upsert: true },
+        function (err, doc) {
+          if (err) {
+            throw err;
+          } else {
+            Users.findOne({ _id: req.body.user_id }).then((user) => {
+              res.status(200).json({
+                status: "1",
+                message: "Successfully updated!",
+                respdata: user,
               });
-            }
+            });
           }
-        );
+        }
+      );
       // });
     }
   });
@@ -411,29 +411,67 @@ exports.changePassword = async function (req, res, next) {
     else {
       // Users.updateOne({ _id: user._id }, { $set: updData });
 
-      bcrypt.hash(req.body.new_password, rounds, (error, hash) => {
-        var updData = {
-          password: hash,
-          // last_login: dateTime,
-        };
-        Users.findOneAndUpdate(
-          { _id: req.body.user_id },
-          { $set: updData },
-          { upsert: true },
-          function (err, doc) {
-            if (err) {
-              throw err;
-            } else {
-              Users.findOne({ _id: req.body.user_id }).then((user) => {
-                res.status(200).json({
-                  status: "1",
-                  message: "Successfully updated!",
-                  respdata: user,
+      bcrypt.compare(req.body.old_password, user.password, (error, match) => {
+        if (error) {
+          res.status(400).json({
+            status: "0",
+            message: "Error!",
+            respdata: error,
+          });
+        } else if (match) {
+          bcrypt.compare(
+            req.body.new_password,
+            user.password,
+            (error, match) => {
+              if (error) {
+                res.status(400).json({
+                  status: "0",
+                  message: "Error!",
+                  respdata: error,
                 });
-              });
+              } else if (!match) {
+                bcrypt.hash(req.body.new_password, rounds, (error, hash) => {
+                  var updData = {
+                    password: hash,
+                    // last_login: dateTime,
+                  };
+                  Users.findOneAndUpdate(
+                    { _id: req.body.user_id },
+                    { $set: updData },
+                    { upsert: true },
+                    function (err, doc) {
+                      if (err) {
+                        throw err;
+                      } else {
+                        Users.findOne({ _id: req.body.user_id }).then(
+                          (user) => {
+                            res.status(200).json({
+                              status: "1",
+                              message: "Successfully updated!",
+                              respdata: user,
+                            });
+                          }
+                        );
+                      }
+                    }
+                  );
+                });
+              } else {
+                res.status(400).json({
+                  status: "0",
+                  message: "New password cannot be same as your Old password!",
+                  respdata: {},
+                });
+              }
             }
-          }
-        );
+          );
+        } else {
+          res.status(400).json({
+            status: "0",
+            message: "Old password does not match!",
+            respdata: {},
+          });
+        }
       });
     }
   });
