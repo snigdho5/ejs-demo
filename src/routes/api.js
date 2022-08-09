@@ -16,6 +16,8 @@ const CategoryController = require("../controllers/api/categoryController");
 const SubCategoryController = require("../controllers/api/subCategoryController");
 const ProgramController = require("../controllers/api/programController");
 const EquipmentController = require("../controllers/api/equipmentController");
+const ExerciseController = require("../controllers/api/exerciseController");
+
 // const helper = require("../helpers/helper");
 //others
 const dateTime = moment().format("YYYY-MM-DD h:mm:ss");
@@ -432,63 +434,63 @@ router.post(
 
 //Exercise
 
-router.get("/exercises", auth.isAuthorized, EquipmentController.getData);
+router.get("/exercises", auth.isAuthorized, ExerciseController.getData);
 
 router.post(
   "/view-exercise",
   auth.isAuthorized,
   [
-    check("equipment_id", "This is a required field!")
+    check("exercise_id", "This is a required field!")
       .not()
       .isEmpty()
       .trim()
       .escape(),
   ],
-  EquipmentController.viewData
+  ExerciseController.viewData
 );
 
 router.post(
-  "/add-equipment",
+  "/add-exercise",
   auth.isAuthorized,
   [
-    check("equipment_name", "This is a required field!")
+    check("exercise_name", "This is a required field!")
       .not()
       .isEmpty()
       .trim()
       .escape(),
   ],
-  EquipmentController.addData
+  ExerciseController.addData
 );
 
 router.post(
-  "/edit-equipment",
+  "/edit-exercise",
   auth.isAuthorized,
   [
-    check("equipment_id", "This is a required field!")
+    check("exercise_id", "This is a required field!")
       .not()
       .isEmpty()
       .trim()
       .escape(),
-    check("equipment_name", "This is a required field!")
+    check("exercise_name", "This is a required field!")
       .not()
       .isEmpty()
       .trim()
       .escape(),
   ],
-  EquipmentController.editData
+  ExerciseController.editData
 );
 
 router.post(
   "/delete-equipment",
   auth.isAuthorized,
   [
-    check("equipment_id", "This is a required field!")
+    check("exercise_id", "This is a required field!")
       .not()
       .isEmpty()
       .trim()
       .escape(),
   ],
-  EquipmentController.deleteData
+  ExerciseController.deleteData
 );
 
 //Programme
