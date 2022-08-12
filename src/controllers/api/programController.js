@@ -16,6 +16,7 @@ const rounds = 10;
 const dateTime = moment().format("YYYY-MM-DD h:mm:ss");
 const auth = require("../../middlewares/auth");
 const { check, validationResult } = require("express-validator");
+const url = require("url");
 
 //methods
 exports.getData = async function (req, res, next) {
@@ -84,8 +85,17 @@ exports.addData = async function (req, res, next) {
         respdata: {},
       });
     } else {
+      const requrl = url.format({
+        protocol: req.protocol,
+        host: req.get("host"),
+        // pathname: req.originalUrl,
+      });
+      var image_url = requrl + "/public/images/no-image.jpg";
+
       const newPro = Program({
         name: req.body.programme_name,
+        description: req.body.description,
+        image: image_url,
         added_dtime: dateTime,
       });
 
@@ -129,8 +139,16 @@ exports.editData = async function (req, res, next) {
     } else {
       // Program.updateOne({ _id: category._id }, { $set: updData });
 
+      const requrl = url.format({
+        protocol: req.protocol,
+        host: req.get("host"),
+        // pathname: req.originalUrl,
+      });
+      var image_url = requrl + "/public/images/no-image.jpg";
       var updData = {
         name: req.body.programme_name,
+        description: req.body.description,
+        image: image_url,
         // last_login: dateTime,
       };
       Program.findOneAndUpdate(
@@ -175,9 +193,9 @@ exports.deleteData = async function (req, res, next) {
     } else {
       //delete
       // try {
-        Program.deleteOne({ _id: req.body.programme_id });
+      Program.deleteOne({ _id: req.body.programme_id });
 
-        Program.remove({ _id: req.body.programme_id });
+      Program.remove({ _id: req.body.programme_id });
 
       // } catch (e) {
       //   return res.status(404).json({

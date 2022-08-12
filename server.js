@@ -5,11 +5,13 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
-
+var path = require("path");
+app.use("/public", express.static(path.join(__dirname, "public")));
 
 //database
 const mongoose = require("mongoose");
-const dbURI = "mongodb+srv://snigdhoU1:MdzrUIxkbf0CGPhW@cluster0.vwhnn.mongodb.net/ukfitness";
+const dbURI =
+  "mongodb+srv://snigdhoU1:MdzrUIxkbf0CGPhW@cluster0.vwhnn.mongodb.net/ukfitness";
 // const dbURI = "mongodb://61.16.131.204:27017/ukfitness";
 
 app.use(express.json());
@@ -33,8 +35,14 @@ app.set("view engine", "ejs");
 app.use(helmet());
 // using bodyParser to parse JSON bodies into JS objects
 // app.use(bodyParser.json());
-app.use(bodyParser.json({limit: "50mb"}));
-app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(
+  bodyParser.urlencoded({
+    limit: "50mb",
+    extended: true,
+    parameterLimit: 50000,
+  })
+);
 // enabling CORS for all requests
 
 // var corsOptions = {
@@ -55,7 +63,6 @@ var api = require("./src/routes/api.js");
 app.use("/", web);
 app.use("/api", api);
 app.use("/routes", routes); //test
-
 
 // catch 404 and forward to error handler
 // app.use(function (req, res, next) {

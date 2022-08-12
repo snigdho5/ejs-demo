@@ -265,6 +265,12 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
+    check("description", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    // check("image", "This is a required field!").not().isEmpty().trim().escape(),
   ],
   CategoryController.addData
 );
@@ -283,6 +289,12 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
+    check("description", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    // check("image", "This is a required field!").not().isEmpty().trim().escape(),
   ],
   CategoryController.editData
 );
@@ -331,6 +343,12 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
+    check("description", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    // check("image", "This is a required field!").not().isEmpty().trim().escape(),
   ],
   SubCategoryController.addData
 );
@@ -354,6 +372,12 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
+    check("description", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    // check("image", "This is a required field!").not().isEmpty().trim().escape(),
   ],
   SubCategoryController.editData
 );
@@ -397,6 +421,12 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
+    check("description", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    // check("image", "This is a required field!").not().isEmpty().trim().escape(),
   ],
   EquipmentController.addData
 );
@@ -415,6 +445,12 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
+    check("description", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    // check("image", "This is a required field!").not().isEmpty().trim().escape(),
   ],
   EquipmentController.editData
 );
@@ -458,6 +494,12 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
+    check("description", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    // check("image", "This is a required field!").not().isEmpty().trim().escape(),
   ],
   ExerciseController.addData
 );
@@ -476,6 +518,12 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
+    check("description", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    // check("image", "This is a required field!").not().isEmpty().trim().escape(),
   ],
   ExerciseController.editData
 );
@@ -524,6 +572,12 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
+    check("description", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    // check("image", "This is a required field!").not().isEmpty().trim().escape(),
   ],
   ProgramController.addData
 );
@@ -542,6 +596,12 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
+    check("description", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    // check("image", "This is a required field!").not().isEmpty().trim().escape(),
   ],
   ProgramController.editData
 );

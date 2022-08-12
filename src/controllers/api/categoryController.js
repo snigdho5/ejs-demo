@@ -17,6 +17,7 @@ const dateTime = moment().format("YYYY-MM-DD h:mm:ss");
 const auth = require("../../middlewares/auth");
 const { check, validationResult } = require("express-validator");
 var ObjectId = require("mongodb").ObjectId;
+const url = require("url");
 
 //methods
 exports.getData = async function (req, res, next) {
@@ -85,8 +86,19 @@ exports.addData = async function (req, res, next) {
         respdata: {},
       });
     } else {
+      const requrl = url.format({
+        protocol: req.protocol,
+        host: req.get("host"),
+        // pathname: req.originalUrl,
+      });
+
+      var image_url = requrl + "/public/images/no-image.jpg";
+      // console.log(image_url);
+
       const newCat = Category({
         name: req.body.category_name,
+        description: req.body.description,
+        image: image_url,
         added_dtime: dateTime,
       });
 
@@ -129,9 +141,17 @@ exports.editData = async function (req, res, next) {
       });
     } else {
       // Category.updateOne({ _id: category._id }, { $set: updData });
+      const requrl = url.format({
+        protocol: req.protocol,
+        host: req.get("host"),
+        // pathname: req.originalUrl,
+      });
+      var image_url = requrl + "/public/images/no-image.jpg";
 
       var updData = {
         name: req.body.category_name,
+        description: req.body.description,
+        image: image_url,
         // last_login: dateTime,
       };
       Category.findOneAndUpdate(
