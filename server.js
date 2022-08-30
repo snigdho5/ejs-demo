@@ -7,6 +7,7 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 var path = require("path");
 app.use("/public", express.static(path.join(__dirname, "public")));
+app.locals.siteName = "UK Fitness";
 
 //database
 const mongoose = require("mongoose");
@@ -29,6 +30,7 @@ db.once("open", () => {
 });
 
 // set the view engine to ejs
+// app.set('views', path.join(__dirname, 'views'));
 app.set("view engine", "ejs");
 
 // adding Helmet to enhance your API's security

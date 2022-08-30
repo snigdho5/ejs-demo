@@ -16,6 +16,11 @@ const rounds = 10;
 const dateTime = moment().format("YYYY-MM-DD h:mm:ss");
 const auth = require("../../middlewares/auth");
 const { check, validationResult } = require("express-validator");
+const url = require("url");
+// var uuid = require("uuid");
+var crypto = require("crypto");
+var randId = crypto.randomBytes(20).toString("hex");
+const multer = require("multer");
 
 //functions
 function generateToken(user) {
@@ -23,9 +28,8 @@ function generateToken(user) {
 }
 
 function decodeBase64Image(dataString) {
-  var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
+  var matches = dataString.match(/^data:([A-Za-z-+/]+);base64,(.+)$/),
     response = {};
-  console.log(matches);
   if (matches) {
     if (matches.length !== 3) {
       return new Error("Invalid input string");
@@ -33,8 +37,6 @@ function decodeBase64Image(dataString) {
 
     response.type = matches[1];
     response.data = new Buffer(matches[2], "base64");
-  } else {
-    response = "";
   }
 
   return response;
@@ -303,25 +305,46 @@ exports.uploadImage = async function (req, res, next) {
         respdata: {},
       });
     else {
-      var decodedImg = decodeBase64Image(req.body.img_base64);
-      console.log("sss:");
-      console.log(decodedImg);
-      if (decodedImg != "") {
-        var imageBuffer = decodedImg.data;
-        var type = decodedImg.type;
-        var extension = mime.extension(type);
-        var fileName = "image." + extension;
-        try {
-          fs.writeFileSync("../uploads/images" + fileName, imageBuffer, "utf8");
-          // fs.readFileSync(img_base64, {encoding: 'base64'});
-        } catch (err) {
-          console.error(err);
-        }
-      }
+      const imgData = req.body.img_base64;
+      const folderPath = "./public/images/";
+      // const decodedImg = decodeBase64Image(imgData);
+      // console.log("new3::::::");
+      // console.log(decodedImg);
+      // if (decodedImg) {
+      //   const imageBuffer = decodedImg.data;
+      //   const type = decodedImg.type;
+      //   const extension = mime.extension(type);
+
+      //   const path = "user-image-" + randId + "." + extension;
+      //   // const path = "user-image-" + uuid.v4() + extension;
+
+      //   try {
+      //     fs.writeFileSync(folderPath + path, imageBuffer, "utf8");
+      //     // fs.readFileSync(img_base64, {encoding: 'base64'});
+      //   } catch (err) {
+      //     console.error(err);
+      //   }
+      // }
+      const path = Date.now() + ".png";
+      // const base64Data = imgData.replace(/^data:([A-Za-z-+/]+);base64,/, "");
+
+      // fs.writeFileSync(path, base64Data, { encoding: "base64" });
+
+      fs.writeFileSync(folderPath + path, imgData, "base64", function (err) {
+        console.log(err);
+      });
+
+      const requrl = url.format({
+        protocol: req.protocol,
+        host: req.get("host"),
+        // pathname: req.originalUrl,
+      });
+
+      var image_url = requrl + "/public/images/" + path;
 
       var updData = {
         // email: req.body.email,
-        image: "nn",
+        image: image_url,
       };
       Users.findOneAndUpdate(
         { _id: req.body.user_id },
@@ -380,7 +403,7 @@ exports.getLogout = async function (req, res, next) {
             Users.findOne({ _id: req.body.user_id }).then((user) => {
               res.status(200).json({
                 status: "1",
-                message: "Successfully loggedout!",
+                message: "Successfully logged out!",
                 respdata: user,
               });
             });
