@@ -12,7 +12,8 @@ const rounds = 10;
 const auth = require("../middlewares/auth");
 const UsersController = require("../controllers/web/usersController");
 var session = require("express-session");
-var { redisStore } = require("../middlewares/redis");
+const url = require("url");
+// var { redisStore } = require("../middlewares/redis");
 
 // middleware that is specific to this router
 // router.use(function timeLog(req, res, next) {
@@ -23,32 +24,56 @@ var { redisStore } = require("../middlewares/redis");
 router.use(
   session({
     secret: "fd$e43W7ujyDFw(8@tF",
-    store: redisStore,
-    saveUninitialized: false,
-    resave: false,
+    // store: redisStore,
+    saveUninitialized: true,
+    resave: true,
   })
 );
 
 router.get("/", function (req, res) {
   // res.send("Front end!");
-  var pageTitle = req.app.locals.siteName + " - Login";
+  if (!req.session.user) {
+    var pageTitle = req.app.locals.siteName + " - Login";
 
-  res.render("pages/index", {
-    status: 1,
-    siteName: req.app.locals.siteName,
-    pageTitle: pageTitle,
-    moment: moment,
-  });
+    res.render("pages/index", {
+      status: 1,
+      siteName: req.app.locals.siteName,
+      pageTitle: pageTitle,
+      year: moment().format("YYYY"),
+    });
+  } else {
+    res.redirect("/dashboard");
+  }
 });
 
 router.get("/dashboard", function (req, res) {
-  var pageTitle = req.app.locals.siteName + " - Dashboard";
+  if (req.session.user) {
+    var pageTitle = req.app.locals.siteName + " - Dashboard";
 
-  res.render("pages/dashboard", {
-    siteName: req.app.locals.siteName,
-    pageTitle: pageTitle,
-    moment: moment,
-  });
+    const requrl = url.format({
+      protocol: req.protocol,
+      host: req.get("host"),
+      // pathname: req.originalUrl,
+    });
+
+    if (req.session.user.image != "na") {
+      var image_url = requrl + "/public/images/" + req.session.user.image;
+    } else {
+      var image_url = requrl + "/public/images/" + "no-image.jpg";
+    }
+
+    res.render("pages/dashboard", {
+      siteName: req.app.locals.siteName,
+      pageTitle: pageTitle,
+      userFullName: req.session.user.name,
+      userImage: image_url,
+      userEmail: req.session.user.email,
+      year: moment().format("YYYY"),
+      requrl: requrl,
+    });
+  } else {
+    res.redirect("/");
+  }
 });
 
 router.get("/about", function (req, res) {
@@ -59,15 +84,15 @@ router.get("/about", function (req, res) {
 
 router.post(
   "/login",
-  // [
-  //   check("email", "Email length should be 10 to 30 characters")
-  //     .isEmail()
-  //     .isLength({ min: 10, max: 30 }),
-  //   check("password", "Password length should be 8 to 10 characters").isLength({
-  //     min: 8,
-  //     max: 10,
-  //   }),
-  // ],
+  [
+    check("email", "Email length should be 10 to 30 characters")
+      .isEmail()
+      .isLength({ min: 10, max: 30 }),
+    check("password", "Password length should be 8 to 10 characters").isLength({
+      min: 8,
+      max: 10,
+    }),
+  ],
   UsersController.getLogin
 );
 
@@ -86,6 +111,19 @@ router.post(
     check("name", "This is a required field!").not().isEmpty().trim().escape(),
   ],
   UsersController.signUp
+);
+
+router.get(
+  "/logout",
+  // auth.isAuthorized,
+  // [
+  //   check("user_id", "This is a required field!")
+  //     .not()
+  //     .isEmpty()
+  //     .trim()
+  //     .escape(),
+  // ],
+  UsersController.getLogout
 );
 
 module.exports = router;

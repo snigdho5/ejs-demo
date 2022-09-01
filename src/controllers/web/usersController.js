@@ -15,7 +15,7 @@ const tokenSecret = "a2sd#Fs43d4G3524Kh";
 const rounds = 10;
 const dateTime = moment().format("YYYY-MM-DD h:mm:ss");
 const auth = require("../../middlewares/auth");
-var { getAllActiveSessions } = require("../../middlewares/redis");
+// var { getAllActiveSessions } = require("../../middlewares/redis");
 const { check, validationResult } = require("express-validator");
 const url = require("url");
 // var uuid = require("uuid");
@@ -71,6 +71,7 @@ exports.signUp = async function (req, res, next) {
             last_login: "na",
             created_dtime: dateTime,
             image: "na",
+            last_logout: "na",
           });
 
           newUser
@@ -105,15 +106,16 @@ exports.getLogin = async function (req, res, next) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     var pageTitle = req.app.locals.siteName + " - Login";
-    res.render("pages/login", {
+    res.render("pages", {
       status: 0,
       siteName: req.app.locals.siteName,
       pageTitle: pageTitle,
-      moment: moment,
+      year: moment().format("YYYY"),
       message: "Validation error!",
       respdata: errors.array(),
     });
   }
+  // console.log(req.session.user);
 
   var pageTitle = req.app.locals.siteName + " - Dashboard";
 
@@ -123,7 +125,7 @@ exports.getLogin = async function (req, res, next) {
         status: 0,
         siteName: req.app.locals.siteName,
         pageTitle: pageTitle,
-        moment: moment,
+        year: moment().format("YYYY"),
         message: "User not found!",
         respdata: {},
       });
@@ -134,7 +136,7 @@ exports.getLogin = async function (req, res, next) {
             status: 0,
             siteName: req.app.locals.siteName,
             pageTitle: pageTitle,
-            moment: moment,
+            year: moment().format("YYYY"),
             message: "Error!",
             respdata: error,
           });
@@ -157,16 +159,19 @@ exports.getLogin = async function (req, res, next) {
                 throw err;
               } else {
                 Users.findOne({ _id: user._id }).then((user) => {
-                  req.session.user = { email: user.email, name: user.name };
+                  // req.session.destroy();
+                  delete req.session.user;
+                  req.session.user = {
+                    userId: user._id,
+                    email: user.email,
+                    name: user.name,
+                    userToken: user.token,
+                    image: user.image,
+                  };
 
-                  const sessions = getAllActiveSessions();
-                  // let users = sessions.map(session => {
-                  //     return session.user
-                  // });
-                  // res.locals.users = sessions.user;
-                  console.log(sessions);
+                  // console.log(req.session.user);
 
-                  res.redirect('/dashboard');
+                  res.redirect("/dashboard");
                 });
               }
             }
@@ -176,7 +181,7 @@ exports.getLogin = async function (req, res, next) {
             status: 0,
             siteName: req.app.locals.siteName,
             pageTitle: pageTitle,
-            moment: moment,
+            year: moment().format("YYYY"),
             message: "Password does not match!",
             respdata: {},
           });
@@ -356,23 +361,39 @@ exports.uploadImage = async function (req, res, next) {
 };
 
 exports.getLogout = async function (req, res, next) {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({
-      status: "0",
-      message: "Validation error!",
-      respdata: errors.array(),
-    });
+  // const errors = validationResult(req);
+  // if (!errors.isEmpty()) {
+  //   var pageTitle = req.app.locals.siteName + " - Login";
+  //   res.render("pages", {
+  //     status: 0,
+  //     siteName: req.app.locals.siteName,
+  //     pageTitle: pageTitle,
+  //     year: moment().format("YYYY"),
+  //     message: "Validation error!",
+  //     respdata: errors.array(),
+  //   });
+  // }
+
+  if (!req.session.user) {
+    res.redirect("/");
   }
 
-  Users.findOne({ _id: req.body.user_id }).then((user) => {
-    if (!user)
-      res.status(404).json({
-        status: "0",
+  const user_id = mongoose.Types.ObjectId(req.session.user.userId);
+  // const email = req.session.user.email;
+
+  // console.log(req.session.user.userId);
+
+  Users.findOne({ _id: user_id }).then((user) => {
+    if (!user) {
+      var pageTitle = req.app.locals.siteName + " - Login";
+      res.render("pages", {
+        status: 0,
+        siteName: req.app.locals.siteName,
+        pageTitle: pageTitle,
+        year: moment().format("YYYY"),
         message: "User not found!",
-        respdata: {},
       });
-    else {
+    } else {
       // Users.updateOne({ _id: user._id }, { $set: updData });
 
       var updData = {
@@ -380,19 +401,18 @@ exports.getLogout = async function (req, res, next) {
         last_logout: dateTime,
       };
       Users.findOneAndUpdate(
-        { _id: req.body.user_id },
+        { _id: user_id },
         { $set: updData },
         { upsert: true },
         function (err, doc) {
           if (err) {
             throw err;
           } else {
-            Users.findOne({ _id: req.body.user_id }).then((user) => {
-              res.status(200).json({
-                status: "1",
-                message: "Successfully logged out!",
-                respdata: user,
-              });
+            Users.findOne({ _id: user_id }).then((user) => {
+              delete req.session.user;
+              // req.session.destroy((err) => {
+              res.redirect("/");
+              // });
             });
           }
         }

@@ -29,6 +29,10 @@ const model = mongoose.Schema({
     type: String,
     required: true,
   },
+  last_logout: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = new mongoose.model("admin_users", model);

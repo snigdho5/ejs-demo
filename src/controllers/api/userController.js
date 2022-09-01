@@ -92,6 +92,7 @@ exports.signUp = async function (req, res, next) {
             goal: req.body.goal,
             hear_from: req.body.hear_from,
             last_login: "na",
+            last_logout: "na",
             created_dtime: dateTime,
             image: "na",
           });
