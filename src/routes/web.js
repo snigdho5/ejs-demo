@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var moment = require("moment");
+const cors = require("cors");
 const mongoose = require("mongoose");
 const db = mongoose.connection;
 const bcrypt = require("bcrypt");
@@ -30,7 +31,7 @@ router.use(
   })
 );
 
-router.get("/", function (req, res) {
+router.get("/", cors(), function (req, res) {
   // res.send("Front end!");
   if (!req.session.user) {
     var pageTitle = req.app.locals.siteName + " - Login";
@@ -46,7 +47,7 @@ router.get("/", function (req, res) {
   }
 });
 
-router.get("/dashboard", function (req, res) {
+router.get("/dashboard", cors(), function (req, res) {
   if (req.session.user) {
     var pageTitle = req.app.locals.siteName + " - Dashboard";
 
@@ -76,14 +77,14 @@ router.get("/dashboard", function (req, res) {
   }
 });
 
-router.get("/about", function (req, res) {
+router.get("/about", cors(), function (req, res) {
   res.render("pages/about", {
     moment: moment,
   });
 });
 
 router.post(
-  "/login",
+  "/login", cors(),
   [
     check("email", "Email length should be 10 to 30 characters")
       .isEmail()
@@ -97,7 +98,7 @@ router.post(
 );
 
 router.post(
-  "/signup",
+  "/signup", cors(),
   [
     check("email", "Email length should be 10 to 30 characters!")
       .isEmail()
@@ -115,6 +116,7 @@ router.post(
 
 router.get(
   "/logout",
+  cors(),
   // auth.isAuthorized,
   // [
   //   check("user_id", "This is a required field!")

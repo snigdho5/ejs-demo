@@ -9,6 +9,8 @@ var path = require("path");
 app.use("/public", express.static(path.join(__dirname, "public")));
 app.locals.siteName = "UK Fitness";
 
+
+
 //database
 const mongoose = require("mongoose");
 const dbURI =
@@ -48,11 +50,32 @@ app.use(
 // enabling CORS for all requests
 
 // var corsOptions = {
-//   origin: "http://localhost:3000"
+//   origin: "http://dev.solutionsfinder.co.uk/"
 // };
 // app.use(cors(corsOptions));
 
+// app.options('*', cors());
 app.use(cors());
+// app.use((req, res, next) => {
+//   res.setHeader("Access-Control-Allow-Origin", "*");
+//   res.setHeader(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
+//   );
+//   res.setHeader(
+//     "Access-Control-Allow-Methods",
+//     "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+//   );
+//   res.setHeader("Cross-origin-Embedder-Policy", "require-corp");
+//   res.setHeader("Cross-origin-Opener-Policy", "same-origin");
+
+//   if (req.method === "OPTIONS") {
+//     res.sendStatus(200);
+//   } else {
+//     next();
+//   }
+// });
+
 // adding morgan to log HTTP requests
 app.use(morgan("combined"));
 
