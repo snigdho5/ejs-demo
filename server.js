@@ -7,7 +7,8 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 var path = require("path");
 app.use("/public", express.static(path.join(__dirname, "public")));
-app.locals.siteName = "UK Fitness";
+
+app.locals.siteName = "UK Fitness Hub";
 
 
 
@@ -96,5 +97,6 @@ app.use("/routes", routes); //test
 //   next(err);
 // });
 
-//snigdho upadhyay
+
+//Snigdho Upadhyay
 app.listen(port, () => console.log(`App listening on port ${port}!`));

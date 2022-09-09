@@ -17,7 +17,6 @@ const dateTime = moment().format("YYYY-MM-DD h:mm:ss");
 const auth = require("../../middlewares/auth");
 // var { getAllActiveSessions } = require("../../middlewares/redis");
 const { check, validationResult } = require("express-validator");
-const url = require("url");
 // var uuid = require("uuid");
 var crypto = require("crypto");
 var randId = crypto.randomBytes(20).toString("hex");
@@ -159,6 +158,16 @@ exports.getLogin = async function (req, res, next) {
                 throw err;
               } else {
                 Users.findOne({ _id: user._id }).then((user) => {
+                  if (user.image != "na") {
+                    var image_url =
+                      req.app.locals.requrl + "/public/images/" + user.image;
+                  } else {
+                    var image_url =
+                      req.app.locals.requrl +
+                      "/public/images/" +
+                      "no-image.jpg";
+                  }
+
                   // req.session.destroy();
                   delete req.session.user;
                   req.session.user = {
@@ -167,6 +176,7 @@ exports.getLogin = async function (req, res, next) {
                     name: user.name,
                     userToken: user.token,
                     image: user.image,
+                    image_url: image_url,
                   };
 
                   // console.log(req.session.user);
@@ -192,16 +202,19 @@ exports.getLogin = async function (req, res, next) {
 };
 
 exports.getProfile = async function (req, res, next) {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({
-      status: "0",
-      message: "Validation error!",
-      respdata: errors.array(),
-    });
-  }
+  // const errors = validationResult(req);
+  // if (!errors.isEmpty()) {
+  //   return res.status(400).json({
+  //     status: "0",
+  //     message: "Validation error!",
+  //     respdata: errors.array(),
+  //   });
+  // }
 
-  Users.findOne({ _id: req.body.user_id }).then((user) => {
+  var pageTitle = req.app.locals.siteName + " - Profile";
+  const user_id = mongoose.Types.ObjectId(req.session.user.userId);
+
+  Users.findOne({ _id: user_id }).then((user) => {
     if (!user) {
       res.status(400).json({
         status: "0",
@@ -211,9 +224,15 @@ exports.getProfile = async function (req, res, next) {
     } else {
       // console.log('%s %s %s', req.method, req.url, req.path);
       user.image = req.baseUrl + "/images/" + "test.jpg";
-      res.status(400).json({
-        status: "1",
-        message: "Detalis Found!",
+
+      res.render("pages/profile", {
+        siteName: req.app.locals.siteName,
+        pageTitle: pageTitle,
+        userFullName: req.session.user.name,
+        userImage: req.session.user.image_url,
+        userEmail: req.session.user.email,
+        year: moment().format("YYYY"),
+        requrl: req.app.locals.requrl,
         respdata: user,
       });
     }
@@ -326,13 +345,7 @@ exports.uploadImage = async function (req, res, next) {
         console.log(err);
       });
 
-      const requrl = url.format({
-        protocol: req.protocol,
-        host: req.get("host"),
-        // pathname: req.originalUrl,
-      });
-
-      var image_url = requrl + "/public/images/" + path;
+      var image_url = req.app.locals.requrl + "/public/images/" + path;
 
       var updData = {
         // email: req.body.email,
@@ -361,19 +374,6 @@ exports.uploadImage = async function (req, res, next) {
 };
 
 exports.getLogout = async function (req, res, next) {
-  // const errors = validationResult(req);
-  // if (!errors.isEmpty()) {
-  //   var pageTitle = req.app.locals.siteName + " - Login";
-  //   res.render("pages", {
-  //     status: 0,
-  //     siteName: req.app.locals.siteName,
-  //     pageTitle: pageTitle,
-  //     year: moment().format("YYYY"),
-  //     message: "Validation error!",
-  //     respdata: errors.array(),
-  //   });
-  // }
-
   if (!req.session.user) {
     res.redirect("/");
   }

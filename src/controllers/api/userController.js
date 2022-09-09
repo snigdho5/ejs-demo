@@ -16,7 +16,6 @@ const rounds = 10;
 const dateTime = moment().format("YYYY-MM-DD h:mm:ss");
 const auth = require("../../middlewares/auth");
 const { check, validationResult } = require("express-validator");
-const url = require("url");
 // var uuid = require("uuid");
 var crypto = require("crypto");
 var randId = crypto.randomBytes(20).toString("hex");
@@ -143,6 +142,13 @@ exports.getLogin = async function (req, res, next) {
         respdata: {},
       });
     else {
+      const requrl = url.format({
+        protocol: req.protocol,
+        host: req.get("host"),
+        // pathname: req.originalUrl,
+      });
+      req.app.locals.requrl = requrl;
+
       bcrypt.compare(req.body.password, user.password, (error, match) => {
         if (error) {
           res.status(400).json({
@@ -335,13 +341,7 @@ exports.uploadImage = async function (req, res, next) {
         console.log(err);
       });
 
-      const requrl = url.format({
-        protocol: req.protocol,
-        host: req.get("host"),
-        // pathname: req.originalUrl,
-      });
-
-      var image_url = requrl + "/public/images/" + path;
+      var image_url = req.app.locals.requrl + "/public/images/" + path;
 
       var updData = {
         // email: req.body.email,
