@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <%- include('../partials/head', {pageTitle: pageTitle}); %>
+    <%- include('../../partials/head', {pageTitle: pageTitle}); %>
 </head>
 
 <body id="page-top">
@@ -11,7 +11,7 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <%- include('../partials/sidebar', {siteName: siteName}); %>
+        <%- include('../../partials/sidebar', {siteName: siteName}); %>
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -21,7 +21,7 @@
             <div id="content">
 
                 <!-- Topbar -->
-                <%- include('../partials/header', {siteName: siteName, userFullName: userFullName, userImage: userImage}); %>
+                <%- include('../../partials/header', {siteName: siteName, userFullName: userFullName, userImage: userImage}); %>
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
@@ -308,7 +308,7 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <%- include('../partials/footer', {year: year, siteName: siteName}); %>
+            <%- include('../../partials/footer', {year: year, siteName: siteName}); %>
             <!-- End of Footer -->
 
         </div>
@@ -324,9 +324,9 @@
 
     <!-- Logout Modal-->
     
-    <%- include('../partials/logoutModal'); %>
+    <%- include('../../partials/logoutModal'); %>
 
-    <%- include('../partials/footerJs'); %>
+    <%- include('../../partials/footerJs'); %>
 
 </body>
 
