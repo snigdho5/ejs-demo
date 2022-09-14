@@ -146,6 +146,19 @@ router.get(
 router.get("/body-focus", cors(), BodyFocusController.getBodyFocus);
 router.get("/add-body-focus", cors(), BodyFocusController.addBodyFocus);
 
+router.post(
+  "/create-body-focus",
+  cors(),
+  [
+    check("name", "This is a required field!")
+    .not()
+    .isEmpty()
+    .trim()
+    .escape(),
+  ],
+  BodyFocusController.createBodyFocus
+);
+
 
 
 module.exports = router;
