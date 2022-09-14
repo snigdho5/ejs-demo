@@ -73,8 +73,26 @@ router.get("/dashboard", cors(), function (req, res) {
   }
 });
 
-
 router.get("/profile", cors(), UsersController.getProfile);
+
+router.post(
+  "/edit-profile",
+  [
+    check("fullName", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    // check(
+    //   "newPassword",
+    //   "Password length should be 8 to 10 characters"
+    // ).isLength({
+    //   min: 8,
+    //   max: 10,
+    // }),
+  ],
+  UsersController.editProfile
+);
 
 router.post(
   "/login",

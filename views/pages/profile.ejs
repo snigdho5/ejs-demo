@@ -40,30 +40,35 @@
                             <form class="user" action="/edit-profile" method="post">
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="exampleFirstName"
-                                            placeholder="First Name" value="">
+                                        <input type="text" class="form-control form-control-user" id="fullName" name="fullName"
+                                            placeholder="Full Name" value="<%= userFullName %>">
                                     </div>
+
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control form-control-user" id="exampleLastName"
-                                            placeholder="Last Name">
+                                        <input type="email" class="form-control form-control-user" id="userEmail" name="usrEmail"
+                                        placeholder="Email Address" value="<%= userEmail %>" readonly>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <%#<div class="form-group">
                                     <input type="email" class="form-control form-control-user" id="exampleInputEmail"
                                         placeholder="Email Address">
-                                </div>
+                                </div>%>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input type="password" class="form-control form-control-user"
-                                            id="exampleInputPassword" placeholder="Password">            
+                                            id="newPassword" name="newPassword" placeholder="Password" value=""  autocomplete="new-password">            
                                     </div>
-                                    <div class="col-sm-6">
+                                    <%#<div class="col-sm-6">
                                         <input type="password" class="form-control form-control-user"
-                                            id="exampleRepeatPassword" placeholder="Repeat Password">
-                                    </div>
+                                        id="repeatPassword" name="repeatPassword" placeholder="Repeat Password">
+                                    </div>%>
                                 </div>
-                                <input type="submit" class="btn btn-primary btn-user btn-block" id="btn_login" name="btn_login" value="Submit">
+                                <input type="submit" class="btn btn-primary btn-user btn-block" id="btn_profile" name="btn_profile" value="Submit">
                             </form>
+                            <hr>
+                            <% if(!status){ %>
+                                <p><%= message %></p>
+                            <% } %>
                           </div>
                       </div>
                 </div>

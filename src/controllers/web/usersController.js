@@ -211,6 +211,10 @@ exports.getProfile = async function (req, res, next) {
   //   });
   // }
 
+  if (!req.session.user) {
+    res.redirect("/");
+  }
+
   var pageTitle = req.app.locals.siteName + " - Profile";
   const user_id = mongoose.Types.ObjectId(req.session.user.userId);
 
@@ -226,6 +230,7 @@ exports.getProfile = async function (req, res, next) {
       user.image = req.baseUrl + "/images/" + "test.jpg";
 
       res.render("pages/profile", {
+        status: 1,
         siteName: req.app.locals.siteName,
         pageTitle: pageTitle,
         userFullName: req.session.user.name,
@@ -235,65 +240,6 @@ exports.getProfile = async function (req, res, next) {
         requrl: req.app.locals.requrl,
         respdata: user,
       });
-    }
-  });
-};
-
-exports.editProfile = async function (req, res, next) {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({
-      status: "0",
-      message: "Validation error!",
-      respdata: errors.array(),
-    });
-  }
-
-  Users.findOne({ _id: req.body.user_id }).then((user) => {
-    if (!user)
-      res.status(404).json({
-        status: "0",
-        message: "User not found!",
-        respdata: {},
-      });
-    else {
-      // Users.updateOne({ _id: user._id }, { $set: updData });
-
-      // bcrypt.hash(req.body.password, rounds, (error, hash) => {
-      var updData = {
-        // email: req.body.email,
-        // password: hash,
-        title: req.body.title,
-        name: req.body.name,
-        age: req.body.age,
-        weight: req.body.weight,
-        height: req.body.height,
-        country: req.body.country,
-        country_code: req.body.country_code,
-        country: req.body.country,
-        goal: req.body.goal,
-        hear_from: req.body.hear_from,
-        // last_login: dateTime,
-      };
-      Users.findOneAndUpdate(
-        { _id: req.body.user_id },
-        { $set: updData },
-        { upsert: true },
-        function (err, doc) {
-          if (err) {
-            throw err;
-          } else {
-            Users.findOne({ _id: req.body.user_id }).then((user) => {
-              res.status(200).json({
-                status: "1",
-                message: "Successfully updated!",
-                respdata: user,
-              });
-            });
-          }
-        }
-      );
-      // });
     }
   });
 };
@@ -421,88 +367,135 @@ exports.getLogout = async function (req, res, next) {
   });
 };
 
-exports.changePassword = async function (req, res, next) {
+exports.editProfile = async function (req, res, next) {
+  var pageTitle = req.app.locals.siteName + " - Profile";
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({
-      status: "0",
+    res.render("pages/profile", {
+      siteName: req.app.locals.siteName,
+      pageTitle: pageTitle,
+      userFullName: req.session.user.name,
+      userImage: req.session.user.image_url,
+      userEmail: req.session.user.email,
+      year: moment().format("YYYY"),
+      requrl: req.app.locals.requrl,
+      status: 0,
       message: "Validation error!",
       respdata: errors.array(),
     });
   }
 
-  Users.findOne({ _id: req.body.user_id }).then((user) => {
-    if (!user)
-      res.status(404).json({
-        status: "0",
+  const user_id = mongoose.Types.ObjectId(req.session.user.userId);
+
+  Users.findOne({ _id: user_id }).then((user) => {
+    if (!user) {
+      res.render("pages/profile", {
+        siteName: req.app.locals.siteName,
+        pageTitle: pageTitle,
+        userFullName: req.session.user.name,
+        userImage: req.session.user.image_url,
+        userEmail: req.session.user.email,
+        year: moment().format("YYYY"),
+        requrl: req.app.locals.requrl,
+        status: 0,
         message: "User not found!",
-        respdata: {},
+        respdata: errors.array(),
       });
-    else {
+    } else {
       // Users.updateOne({ _id: user._id }, { $set: updData });
 
-      bcrypt.compare(req.body.old_password, user.password, (error, match) => {
-        if (error) {
-          res.status(400).json({
-            status: "0",
-            message: "Error!",
-            respdata: error,
-          });
-        } else if (match) {
-          bcrypt.compare(
-            req.body.new_password,
-            user.password,
-            (error, match) => {
-              if (error) {
-                res.status(400).json({
-                  status: "0",
-                  message: "Error!",
-                  respdata: error,
+      if (!req.body.newPassword) {
+        var updData = {
+          name: req.body.fullName,
+          // last_login: dateTime,
+        };
+        Users.findOneAndUpdate(
+          { _id: user_id },
+          { $set: updData },
+          { upsert: true },
+          function (err, doc) {
+            if (err) {
+              throw err;
+            } else {
+              Users.findOne({ _id: user_id }).then((user) => {
+                res.render("pages/profile", {
+                  siteName: req.app.locals.siteName,
+                  pageTitle: pageTitle,
+                  userFullName: user.name,
+                  userImage: req.session.user.image_url,
+                  userEmail: user.email,
+                  year: moment().format("YYYY"),
+                  requrl: req.app.locals.requrl,
+                  status: 0,
+                  message: "Successfully updated!",
+                  respdata: user,
                 });
-              } else if (!match) {
-                bcrypt.hash(req.body.new_password, rounds, (error, hash) => {
-                  var updData = {
-                    password: hash,
-                    // last_login: dateTime,
-                  };
-                  Users.findOneAndUpdate(
-                    { _id: req.body.user_id },
-                    { $set: updData },
-                    { upsert: true },
-                    function (err, doc) {
-                      if (err) {
-                        throw err;
-                      } else {
-                        Users.findOne({ _id: req.body.user_id }).then(
-                          (user) => {
-                            res.status(200).json({
-                              status: "1",
-                              message: "Successfully updated!",
-                              respdata: user,
-                            });
-                          }
-                        );
-                      }
-                    }
-                  );
-                });
-              } else {
-                res.status(400).json({
-                  status: "0",
-                  message: "New password cannot be same as your Old password!",
-                  respdata: {},
-                });
-              }
+              });
             }
-          );
-        } else {
-          res.status(400).json({
-            status: "0",
-            message: "Old password does not match!",
-            respdata: {},
-          });
-        }
-      });
+          }
+        );
+      } else {
+        bcrypt.compare(req.body.newPassword, user.password, (error, match) => {
+          if (error) {
+            res.render("pages/profile", {
+              siteName: req.app.locals.siteName,
+              pageTitle: pageTitle,
+              userFullName: user.name,
+              userImage: req.session.user.image_url,
+              userEmail: user.email,
+              year: moment().format("YYYY"),
+              requrl: req.app.locals.requrl,
+              status: 0,
+              message: "error!",
+              respdata: error,
+            });
+          } else if (!match) {
+            bcrypt.hash(req.body.newPassword, rounds, (error, hash) => {
+              var updData = {
+                password: hash,
+                // last_login: dateTime,
+              };
+              Users.findOneAndUpdate(
+                { _id: user_id },
+                { $set: updData },
+                { upsert: true },
+                function (err, doc) {
+                  if (err) {
+                    throw err;
+                  } else {
+                    Users.findOne({ _id: user_id }).then((user) => {
+                      res.render("pages/profile", {
+                        siteName: req.app.locals.siteName,
+                        pageTitle: pageTitle,
+                        userFullName: req.session.user.name,
+                        userImage: req.session.user.image_url,
+                        userEmail: req.session.user.email,
+                        year: moment().format("YYYY"),
+                        requrl: req.app.locals.requrl,
+                        status: 0,
+                        message: "Successfully updated!",
+                        respdata: user,
+                      });
+                    });
+                  }
+                }
+              );
+            });
+          } else {
+            res.render("pages/profile", {
+              siteName: req.app.locals.siteName,
+              pageTitle: pageTitle,
+              userFullName: req.session.user.name,
+              userImage: req.session.user.image_url,
+              userEmail: req.session.user.email,
+              status: 0,
+              year: moment().format("YYYY"),
+              message: "New password cannot be same as your Old password!!",
+              respdata: {},
+            });
+          }
+        });
+      }
     }
   });
 };
