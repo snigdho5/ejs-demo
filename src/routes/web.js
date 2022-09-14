@@ -13,6 +13,7 @@ const rounds = 10;
 //controllers, models, services, helpers
 const auth = require("../middlewares/auth");
 const UsersController = require("../controllers/web/usersController");
+const BodyFocusController = require("../controllers/web/bodyFocusController");
 var session = require("express-session");
 
 // var { redisStore } = require("../middlewares/redis");
@@ -140,5 +141,11 @@ router.get(
   // ],
   UsersController.getLogout
 );
+
+//body focus
+router.get("/body-focus", cors(), BodyFocusController.getBodyFocus);
+router.get("/add-body-focus", cors(), BodyFocusController.addBodyFocus);
+
+
 
 module.exports = router;
