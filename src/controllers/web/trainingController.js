@@ -44,7 +44,10 @@ exports.getTraining = async function (req, res, next) {
         requrl: req.app.locals.requrl,
         status: 0,
         message: "found!",
-        respdata: {},
+        respdata: {
+          page_name:'training',
+          module_name:'training_list'
+        },
       });
 //   });
 };
@@ -65,7 +68,10 @@ exports.addTraining = async function (req, res, next) {
           requrl: req.app.locals.requrl,
           status: 0,
           message: "found!",
-          respdata: {},
+          respdata: {
+            page_name:'training',
+            module_name:'training_list'
+          },
         });
   //   });
   };
