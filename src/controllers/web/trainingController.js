@@ -28,13 +28,13 @@ function generateToken(user) {
 }
 
 //methods
-exports.getTraning = async function (req, res, next) {
+exports.getTraining = async function (req, res, next) {
   // Validate request parameters, queries using express-validator
 
-  var pageTitle = req.app.locals.siteName + " - Traning List";
+  var pageTitle = req.app.locals.siteName + " - Training List";
 
 //   Users.find().then((users) => {
-    res.render("pages/traning/list", {
+    res.render("pages/training/list", {
         siteName: req.app.locals.siteName,
         pageTitle: pageTitle,
         userFullName: req.session.user.name,
@@ -49,13 +49,13 @@ exports.getTraning = async function (req, res, next) {
 //   });
 };
 
-exports.addTraning = async function (req, res, next) {
+exports.addTraining = async function (req, res, next) {
     // Validate request parameters, queries using express-validator
   
-    var pageTitle = req.app.locals.siteName + " - Add Traning";
+    var pageTitle = req.app.locals.siteName + " - Add Training";
 
   //   Users.find().then((users) => {
-      res.render("pages/traning/create", {
+      res.render("pages/training/create", {
           siteName: req.app.locals.siteName,
           pageTitle: pageTitle,
           userFullName: req.session.user.name,

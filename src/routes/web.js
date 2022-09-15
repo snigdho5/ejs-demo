@@ -14,7 +14,7 @@ const rounds = 10;
 const auth = require("../middlewares/auth");
 const UsersController = require("../controllers/web/usersController");
 const BodyFocusController = require("../controllers/web/bodyFocusController");
-const TraningController = require("../controllers/web/traningController");
+const TrainingController = require("../controllers/web/trainingController");
 var session = require("express-session");
 
 // var { redisStore } = require("../middlewares/redis");
@@ -160,8 +160,8 @@ router.post(
   BodyFocusController.createBodyFocus
 );
 
-router.get("/traning", cors(), TraningController.getTraning);
-router.get("/add-traning", cors(), TraningController.addTraning);
+router.get("/training", cors(), TrainingController.getTraining);
+router.get("/add-training", cors(), TrainingController.addTraining);
 
 
 
