@@ -163,6 +163,9 @@ router.get("/add-body-focus", cors(), BodyFocusController.addBodyFocus);
 router.get("/training", cors(), TrainingController.getTraining);
 router.get("/add-training", cors(), TrainingController.addTraining);
 
+router.get("/exercise", cors(), TrainingController.getExercise);
+router.get("/add-exercise", cors(), TrainingController.addExercise);
+
 
 
 module.exports = router;

@@ -70,3 +70,38 @@ exports.addTraining = async function (req, res, next) {
   //   });
   };
 
+exports.getExercise = async function (req, res, next) {
+    // Validate request parameters, queries using express-validator
+  
+    var pageTitle = req.app.locals.siteName + " - Exercise List";
+  
+      res.render("pages/exercise/list", {
+          siteName: req.app.locals.siteName,
+          pageTitle: pageTitle,
+          userFullName: req.session.user.name,
+          userImage: req.session.user.image_url,
+          userEmail: req.session.user.email,
+          year: moment().format("YYYY"),
+          requrl: req.app.locals.requrl,
+          status: 0,
+          message: "found!",
+          respdata: {},
+        });
+};  
+
+exports.addExercise = async function (req, res, next) {
+  var pageTitle = req.app.locals.siteName + " - Add Exercise";
+  res.render("pages/exercise/create", {
+        siteName: req.app.locals.siteName,
+        pageTitle: pageTitle,
+        userFullName: req.session.user.name,
+        userImage: req.session.user.image_url,
+        userEmail: req.session.user.email,
+        year: moment().format("YYYY"),
+        requrl: req.app.locals.requrl,
+        status: 0,
+        message: "found!",
+        respdata: {},
+  });
+};
+
