@@ -21,7 +21,6 @@ const url = require("url");
 
 //methods
 exports.getData = async function (req, res, next) {
-  // Validate request parameters, queries using express-validator
 
   Category.find().then((category) => {
     if (!category) {
@@ -68,7 +67,6 @@ exports.viewData = async function (req, res, next) {
 };
 
 exports.addData = async function (req, res, next) {
-  // Validate request parameters, queries using express-validator
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({

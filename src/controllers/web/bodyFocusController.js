@@ -7,7 +7,7 @@ const http = require("http");
 const path = require("path");
 const fs = require("fs");
 const mime = require("mime");
-const Users = require("../../models/web/usersModel");
+const Category = require("../../models/api/categoryModel");
 // const helper = require("../helpers/helper");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -33,7 +33,7 @@ exports.getBodyFocus = async function (req, res, next) {
 
   var pageTitle = req.app.locals.siteName + " - Body Focus List";
 
-//   Users.find().then((users) => {
+  Category.find().then((category) => {
     res.render("pages/body-focus/list", {
         siteName: req.app.locals.siteName,
         pageTitle: pageTitle,
@@ -44,9 +44,11 @@ exports.getBodyFocus = async function (req, res, next) {
         requrl: req.app.locals.requrl,
         status: 0,
         message: "found!",
-        respdata: {},
+        respdata: {
+          category : Category,
+        }
       });
-//   });
+  });
 };
 
 exports.addBodyFocus = async function (req, res, next) {
