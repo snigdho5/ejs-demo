@@ -14,7 +14,8 @@ const rounds = 10;
 const auth = require("../middlewares/auth");
 const UsersController = require("../controllers/web/usersController");
 const BodyFocusController = require("../controllers/web/bodyFocusController");
-const TrainingController = require("../controllers/web/trainingController");
+const SubFilterController = require("../controllers/web/subFilterController");
+const ExerciseController = require("../controllers/web/exerciseController");
 var session = require("express-session");
 
 // var { redisStore } = require("../middlewares/redis");
@@ -144,27 +145,117 @@ router.get(
 );
 
 //body focus
-router.get("/body-focus", cors(), BodyFocusController.getBodyFocus);
-router.get("/add-body-focus", cors(), BodyFocusController.addBodyFocus);
+router.get("/body-focus", cors(), BodyFocusController.getData);
+router.get("/add-body-focus", cors(), BodyFocusController.addData);
+
+router.post(
+  "/create-body-focus",
+  cors(),
+  [
+    check("focus_name", "This is a required field!")
+    .not()
+    .isEmpty()
+    .trim()
+    .escape(),
+    check("description", "This is a required field!")
+    .not()
+    .isEmpty()
+    .trim()
+    .escape(),
+  ],
+  BodyFocusController.createData
+);
+
+router.get("/edit-body-focus/:id", cors(), BodyFocusController.editData);
+
+router.post(
+  "/update-body-focus",
+  cors(),
+  [
+    check("focus_name", "This is a required field!")
+    .not()
+    .isEmpty()
+    .trim()
+    .escape(),
+    check("description", "This is a required field!")
+    .not()
+    .isEmpty()
+    .trim()
+    .escape(),
+  ],
+  BodyFocusController.updateData
+);
+
+router.post(
+  "/delete-body-focus",
+  [
+    check("category_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  BodyFocusController.deleteData
+);
+
+
+//sub filters
+router.get("/sub-filters", cors(), SubFilterController.getData);
+router.get("/add-sub-filter", cors(), SubFilterController.addData);
 
 // router.post(
-//   "/create-body-focus",
+//   "/create-training",
 //   cors(),
 //   [
-//     check("name", "This is a required field!")
+//     check("focus_name", "This is a required field!")
+//     .not()
+//     .isEmpty()
+//     .trim()
+//     .escape(),
+//     check("description", "This is a required field!")
 //     .not()
 //     .isEmpty()
 //     .trim()
 //     .escape(),
 //   ],
-//   BodyFocusController.createBodyFocus
+//   SubFilterController.createData
 // );
 
-router.get("/training", cors(), TrainingController.getTraining);
-router.get("/add-training", cors(), TrainingController.addTraining);
+// router.get("/edit-training/:id", cors(), SubFilterController.editData);
 
-router.get("/exercise", cors(), TrainingController.getExercise);
-router.get("/add-exercise", cors(), TrainingController.addExercise);
+// router.post(
+//   "/update-training",
+//   cors(),
+//   [
+//     check("focus_name", "This is a required field!")
+//     .not()
+//     .isEmpty()
+//     .trim()
+//     .escape(),
+//     check("description", "This is a required field!")
+//     .not()
+//     .isEmpty()
+//     .trim()
+//     .escape(),
+//   ],
+//   SubFilterController.updateData
+// );
+
+// router.post(
+//   "/delete-training",
+//   [
+//     check("category_id", "This is a required field!")
+//       .not()
+//       .isEmpty()
+//       .trim()
+//       .escape(),
+//   ],
+//   SubFilterController.deleteData
+// );
+
+//ExerciseController
+router.get("/exercises", cors(), ExerciseController.getData);
+router.get("/add-exercise", cors(), ExerciseController.addData);
 
 
 

@@ -1,6 +1,14 @@
 const mongoose = require("mongoose");
 
 const model = mongoose.Schema({
+  category_ids: {
+    type: String,
+    required: true,
+  },
+  equipment_ids: {
+    type: String,
+    required: true,
+  },
   name: {
     type: String,
     required: true,

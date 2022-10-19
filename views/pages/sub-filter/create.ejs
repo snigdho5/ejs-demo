@@ -34,25 +34,31 @@
                       <!-- DataTales Example -->
                       <div class="card shadow mb-4">
                           <div class="card-header py-3">
-                              <h6 class="m-0 font-weight-bold text-primary"><%-pageName%> Create</h6>
+                              <h6 class="m-0 font-weight-bold text-primary"><%-pageName%> Details</h6>
                           </div>
                           <div class="card-body">
-                            <form class="user" action="/create-body-focus" method="post">
+                            <form class="user" action="/create-training" method="post">
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="focus_name" name="focus_name" placeholder="Name" value="" required>
-                                    </div>
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <textarea type="text" class="form-control form-control-user" id="description" name="description" placeholder="Description" required></textarea>
+                                        <select class="form-control" name="body_focus" id="body_focus">
+                                            <option value="0" selected>Select Body Focus</option>
+                                            <% if(respdata.category){ %>
+                                                <% respdata.category.forEach(function(value, index) { %> 
+                                                    <option value="<%= value._id %>"><%= value.name %></option>
+                                                <% });  %>
+                                            <% } %> 
+                                        </select>
                                     </div>
                                 </div>
-                                <input type="submit" class="btn btn-primary btn-user btn-block" id="btn_profile" name="btn_profile" value="Submit">
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="text" class="form-control form-control-user" id="training" name="training"
+                                            placeholder="Training..." value="">
+                                    </div>
+                                </div>
+                                <input type="submit" class="btn btn-primary btn-user btn-block" id="btn_training" name="btn_training" value="Submit">
                             </form>
                             <hr>
-                            <% if(!status){ %>
-                                <h6 style="background-color:aquamarine; align-content: center;">Message: <%= message %></h6>
-                                <p><%# respdata %></p>
-                            <% } %>
                           </div>
                       </div>
                 </div>

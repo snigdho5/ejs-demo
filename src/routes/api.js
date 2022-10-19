@@ -499,6 +499,16 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
+    check("category_ids", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("equipment_ids", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
     // check("image", "This is a required field!").not().isEmpty().trim().escape(),
   ],
   ExerciseController.addData
@@ -519,6 +529,16 @@ router.post(
       .trim()
       .escape(),
     check("description", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("category_ids", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("equipment_ids", "This is a required field!")
       .not()
       .isEmpty()
       .trim()
