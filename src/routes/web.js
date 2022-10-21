@@ -16,6 +16,7 @@ const UsersController = require("../controllers/web/usersController");
 const BodyFocusController = require("../controllers/web/bodyFocusController");
 const SubFilterController = require("../controllers/web/subFilterController");
 const ExerciseController = require("../controllers/web/exerciseController");
+const EquipmentController = require("../controllers/web/equipmentController");
 var session = require("express-session");
 
 // var { redisStore } = require("../middlewares/redis");
@@ -257,6 +258,9 @@ router.get("/add-sub-filter", cors(), SubFilterController.addData);
 router.get("/exercises", cors(), ExerciseController.getData);
 router.get("/add-exercise", cors(), ExerciseController.addData);
 
+//EquipmentController
+router.get("/equipments", cors(), EquipmentController.getData);
+router.get("/add-equipment", cors(), EquipmentController.addData);
 
 
 module.exports = router;
