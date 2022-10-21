@@ -7,7 +7,7 @@ const http = require("http");
 const path = require("path");
 const fs = require("fs");
 const mime = require("mime");
-const Users = require("../../models/web/usersModel");
+const Equipment = require("../../models/api/equipmentModel");
 // const helper = require("../helpers/helper");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -29,25 +29,28 @@ exports.getData = async function (req, res, next) {
 
   var pageName = "Equipment";
   var pageTitle = req.app.locals.siteName + " - " + pageName + " List";
-
-  res.render("pages/equipment/list", {
-    siteName: req.app.locals.siteName,
-    pageName: pageName,
-    pageTitle: pageTitle,
-    userFullName: req.session.user.name,
-    userImage: req.session.user.image_url,
-    userEmail: req.session.user.email,
-    year: moment().format("YYYY"),
-    requrl: req.app.locals.requrl,
-    status: 0,
-    message: "found!",
-    respdata: {},
+  Equipment.find().then((equipment) => {
+    res.render("pages/equipment/list", {
+      siteName: req.app.locals.siteName,
+      pageName: pageName,
+      pageTitle: pageTitle,
+      userFullName: req.session.user.name,
+      userImage: req.session.user.image_url,
+      userEmail: req.session.user.email,
+      year: moment().format("YYYY"),
+      requrl: req.app.locals.requrl,
+      status: 0,
+      message: "found!",
+      respdata: {
+        list: equipment,
+      },
+    });
   });
 };
 
 exports.addData = async function (req, res, next) {
-    var pageName = "Equipment";
-    var pageTitle = req.app.locals.siteName + " - Add " + pageName;
+  var pageName = "Equipment";
+  var pageTitle = req.app.locals.siteName + " - Add " + pageName;
   res.render("pages/equipment/create", {
     siteName: req.app.locals.siteName,
     pageName: pageName,
