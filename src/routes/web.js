@@ -204,7 +204,7 @@ router.get("/sub-filters", cors(), SubFilterController.getData);
 router.get("/add-sub-filter", cors(), SubFilterController.addData);
 
 // router.post(
-//   "/create-training",
+//   "/create-sub-filter",
 //   cors(),
 //   [
 //     check("focus_name", "This is a required field!")
@@ -221,10 +221,10 @@ router.get("/add-sub-filter", cors(), SubFilterController.addData);
 //   SubFilterController.createData
 // );
 
-// router.get("/edit-training/:id", cors(), SubFilterController.editData);
+// router.get("/edit-sub-filter/:id", cors(), SubFilterController.editData);
 
 // router.post(
-//   "/update-training",
+//   "/update-sub-filter",
 //   cors(),
 //   [
 //     check("focus_name", "This is a required field!")
@@ -242,7 +242,7 @@ router.get("/add-sub-filter", cors(), SubFilterController.addData);
 // );
 
 // router.post(
-//   "/delete-training",
+//   "/delete-sub-filter",
 //   [
 //     check("category_id", "This is a required field!")
 //       .not()
