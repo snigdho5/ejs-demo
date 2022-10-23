@@ -65,7 +65,7 @@ exports.addData = async function (req, res, next) {
       userEmail: req.session.user.email,
       year: moment().format("YYYY"),
       requrl: req.app.locals.requrl,
-      status: 0,
+      status: 1,
       message: "found!",
       respdata: {
         category: category,

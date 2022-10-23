@@ -60,8 +60,92 @@ exports.addData = async function (req, res, next) {
     userEmail: req.session.user.email,
     year: moment().format("YYYY"),
     requrl: req.app.locals.requrl,
-    status: 0,
+    status: 1,
     message: "found!",
     respdata: {},
+  });
+};
+
+
+exports.createData = async function (req, res, next) {
+  var pageName = "Equipment";
+  var pageTitle = req.app.locals.siteName + " - Add " + pageName;
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.render("pages/equipment/create", {
+      status: 0,
+      siteName: req.app.locals.siteName,
+      userFullName: req.session.user.name,
+      userImage: req.session.user.image_url,
+      userEmail: req.session.user.email,
+      pageName: pageName,
+      pageTitle: pageTitle,
+      year: moment().format("YYYY"),
+      message: "Validation error!",
+      requrl: req.app.locals.requrl,
+      respdata: errors.array(),
+    });
+  }
+
+  Equipment.findOne({ name: req.body.equipment_name }).then((equipment) => {
+    if (equipment) {
+      res.render("pages/equipment/create", {
+        status: 0,
+        siteName: req.app.locals.siteName,
+        userFullName: req.session.user.name,
+        userImage: req.session.user.image_url,
+        userEmail: req.session.user.email,
+        pageName: pageName,
+        pageTitle: pageTitle,
+        year: moment().format("YYYY"),
+        message: "Already exists!",
+        requrl: req.app.locals.requrl,
+        respdata: {},
+      });
+    } else {
+      var image_url = req.app.locals.requrl + "/public/images/no-image.jpg";
+      // console.log(image_url);
+
+      const newCat = Equipment({
+        name: req.body.equipment_name,
+        description: req.body.description,
+        image: image_url,
+        added_dtime: dateTime,
+      });
+
+      newCat
+        .save()
+        .then((equipment) => {
+          res.render("pages/equipment/create", {
+            status: 0,
+            siteName: req.app.locals.siteName,
+            pageName: pageName,
+            pageTitle: pageTitle,
+            userFullName: req.session.user.name,
+            userImage: req.session.user.image_url,
+            userEmail: req.session.user.email,
+            year: moment().format("YYYY"),
+            message: "Added!",
+            requrl: req.app.locals.requrl,
+            respdata: equipment,
+          });
+        })
+        .catch((error) => {
+          res.render("pages/equipment/create", {
+            status: 0,
+            pageName: pageName,
+            siteName: req.app.locals.siteName,
+            userFullName: req.session.user.name,
+            userImage: req.session.user.image_url,
+            userEmail: req.session.user.email,
+            pageTitle: pageTitle,
+            year: moment().format("YYYY"),
+            requrl: req.app.locals.requrl,
+            message: "Error!",
+            respdata: error,
+          });
+        });
+    }
   });
 };

@@ -154,15 +154,15 @@ router.post(
   cors(),
   [
     check("focus_name", "This is a required field!")
-    .not()
-    .isEmpty()
-    .trim()
-    .escape(),
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
     check("description", "This is a required field!")
-    .not()
-    .isEmpty()
-    .trim()
-    .escape(),
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
   ],
   BodyFocusController.createData
 );
@@ -174,15 +174,15 @@ router.post(
   cors(),
   [
     check("focus_name", "This is a required field!")
-    .not()
-    .isEmpty()
-    .trim()
-    .escape(),
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
     check("description", "This is a required field!")
-    .not()
-    .isEmpty()
-    .trim()
-    .escape(),
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
   ],
   BodyFocusController.updateData
 );
@@ -198,7 +198,6 @@ router.post(
   ],
   BodyFocusController.deleteData
 );
-
 
 //sub filters
 router.get("/sub-filters", cors(), SubFilterController.getData);
@@ -254,13 +253,29 @@ router.get("/add-sub-filter", cors(), SubFilterController.addData);
 //   SubFilterController.deleteData
 // );
 
-//ExerciseController
-router.get("/exercises", cors(), ExerciseController.getData);
-router.get("/add-exercise", cors(), ExerciseController.addData);
-
 //EquipmentController
 router.get("/equipments", cors(), EquipmentController.getData);
 router.get("/add-equipment", cors(), EquipmentController.addData);
+router.post(
+  "/create-equipment",
+  cors(),
+  [
+    check("equipment_name", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("description", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  EquipmentController.createData
+);
 
+//ExerciseController
+router.get("/exercises", cors(), ExerciseController.getData);
+router.get("/add-exercise", cors(), ExerciseController.addData);
 
 module.exports = router;

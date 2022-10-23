@@ -59,6 +59,10 @@
                                 <input type="submit" class="btn btn-primary btn-user btn-block" id="btn_training" name="btn_training" value="Submit">
                             </form>
                             <hr>
+                            <% if(!status){ %>
+                                <h6 style="background-color:aquamarine; align-content: center;">Message: <%= message %></h6>
+                                <p><%# respdata %></p>
+                            <% } %>
                           </div>
                       </div>
                 </div>
