@@ -17,6 +17,8 @@ const BodyFocusController = require("../controllers/web/bodyFocusController");
 const SubFilterController = require("../controllers/web/subFilterController");
 const ExerciseController = require("../controllers/web/exerciseController");
 const EquipmentController = require("../controllers/web/equipmentController");
+const CmsController = require("../controllers/web/cmcController");
+const ContactController = require("../controllers/web/contactController");
 var session = require("express-session");
 
 // var { redisStore } = require("../middlewares/redis");
@@ -282,5 +284,13 @@ router.post(
 //ExerciseController
 router.get("/exercises", cors(), ExerciseController.getData);
 router.get("/add-exercise", cors(), ExerciseController.addData);
+
+
+//CmsController
+router.get("/cms", cors(), CmsController.getData);
+router.get("/add-cms", cors(), CmsController.addData);
+
+//ContactController
+router.get("/contact-requests", cors(), ContactController.getData);
 
 module.exports = router;
