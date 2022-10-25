@@ -203,23 +203,28 @@ router.post(
 router.get("/sub-filters", cors(), SubFilterController.getData);
 router.get("/add-sub-filter", cors(), SubFilterController.addData);
 
-// router.post(
-//   "/create-sub-filter",
-//   cors(),
-//   [
-//     check("focus_name", "This is a required field!")
-//     .not()
-//     .isEmpty()
-//     .trim()
-//     .escape(),
-//     check("description", "This is a required field!")
-//     .not()
-//     .isEmpty()
-//     .trim()
-//     .escape(),
-//   ],
-//   SubFilterController.createData
-// );
+router.post(
+  "/create-sub-filter",
+  cors(),
+  [
+    check("body_focus", "This is a required field!")
+    .not()
+    .isEmpty()
+    .trim()
+    .escape(),
+    check("sub_filter", "This is a required field!")
+    .not()
+    .isEmpty()
+    .trim()
+    .escape(),
+    check("description", "This is a required field!")
+    .not()
+    .isEmpty()
+    .trim()
+    .escape(),
+  ],
+  SubFilterController.createData
+);
 
 // router.get("/edit-sub-filter/:id", cors(), SubFilterController.editData);
 
