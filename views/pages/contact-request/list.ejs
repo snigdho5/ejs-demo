@@ -55,14 +55,24 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Madhumoy Ghosh</td>
-                                            <td>7679802897</td>
-                                            <td>madhumoy.lnsel@gmail.com</td>
-                                            <td>Test Message</td>
-                                            <td>22-10-2022 11:59 AM</td>
-                                        </tr>
+                                        <% if(respdata.list){ %>
+                                            <% respdata.list.forEach(function(value, index) { %> 
+                                            <tr>
+                                                <td><%= (index+1) %></td>
+                                                <td><%= value.name %></td>
+                                                <td><%= value.phone %></td>
+                                                <td><%= value.email %></td>
+                                                <td><%= value.message %></td>
+                                                <td><%= value.added_dtime %></td>
+                                                <!-- <td>Active</th> -->
+                                                    <%#<td>
+                                                    <a href="/delete-body-focus" class="btn btn-danger btn-circle btn-sm"  title="Delete">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
+                                                </td>%>
+                                            </tr>
+                                            <% });  %>
+                                        <% } %> 
                                     </tbody>
                                 </table>
                             </div>

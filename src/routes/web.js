@@ -281,16 +281,33 @@ router.post(
   EquipmentController.createData
 );
 
-//ExerciseController
+//Exercises
 router.get("/exercises", cors(), ExerciseController.getData);
 router.get("/add-exercise", cors(), ExerciseController.addData);
+router.post(
+  "/create-exercise",
+  cors(),
+  [
+    check("exercise_name", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("description", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  ExerciseController.createData
+);
 
 
-//CmsController
+//Cms
 router.get("/cms", cors(), CmsController.getData);
 router.get("/add-cms", cors(), CmsController.addData);
 
-//ContactController
+//Contact
 router.get("/contact-requests", cors(), ContactController.getData);
 
 module.exports = router;

@@ -7,7 +7,7 @@ const http = require("http");
 const path = require("path");
 const fs = require("fs");
 const mime = require("mime");
-const Equipment = require("../../models/api/equipmentModel");
+const Contact = require("../../models/api/contactReqModel");
 // const helper = require("../helpers/helper");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -29,7 +29,7 @@ exports.getData = async function (req, res, next) {
 
   var pageName = "Contact Request";
   var pageTitle = req.app.locals.siteName + " - " + pageName + " List";
-  Equipment.find().then((equipment) => {
+  Contact.find().then((contact) => {
     res.render("pages/contact-request/list", {
       siteName: req.app.locals.siteName,
       pageName: pageName,
@@ -42,7 +42,7 @@ exports.getData = async function (req, res, next) {
       status: 0,
       message: "found!",
       respdata: {
-        list: equipment,
+        list: contact,
       },
     });
   });
