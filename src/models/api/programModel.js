@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const model = mongoose.Schema({
-  category_id: {
+  exercise_ids: {
     type: String,
     required: true,
   },

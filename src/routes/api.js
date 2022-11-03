@@ -582,7 +582,7 @@ router.post(
   "/add-programme",
   auth.isAuthorized,
   [
-    check("programme_id", "This is a required field!")
+    check("exercise_ids", "This is a required field!")
       .not()
       .isEmpty()
       .trim()
@@ -592,11 +592,11 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
-    check("description", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
+    // check("description", "This is a required field!")
+    //   .not()
+    //   .isEmpty()
+    //   .trim()
+    //   .escape(),
     // check("image", "This is a required field!").not().isEmpty().trim().escape(),
   ],
   ProgramController.addData

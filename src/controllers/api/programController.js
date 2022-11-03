@@ -93,8 +93,9 @@ exports.addData = async function (req, res, next) {
       var image_url = requrl + "/public/images/no-image.jpg";
 
       const newPro = Program({
+        exercise_ids: req.body.exercise_ids,
         name: req.body.programme_name,
-        description: req.body.description,
+        description: req.body.description ? req.body.description : "na",
         image: image_url,
         added_dtime: dateTime,
       });
