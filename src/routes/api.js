@@ -642,11 +642,11 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
-    check("description", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
+    // check("description", "This is a required field!")
+    //   .not()
+    //   .isEmpty()
+    //   .trim()
+    //   .escape(),
     // check("image", "This is a required field!").not().isEmpty().trim().escape(),
   ],
   ProgramController.editData
