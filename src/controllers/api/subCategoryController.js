@@ -66,6 +66,35 @@ exports.viewData = async function (req, res, next) {
   });
 };
 
+exports.getSubCatData = async function (req, res, next) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      status: "0",
+      message: "Validation error!",
+      respdata: errors.array(),
+    });
+  }
+
+  SubCategory.find({ category_id: req.body.category_id }).then(
+    (subcategory) => {
+      if (!subcategory) {
+        res.status(404).json({
+          status: "0",
+          message: "Not found!",
+          respdata: {},
+        });
+      } else {
+        res.status(200).json({
+          status: "1",
+          message: "Found!",
+          respdata: subcategory,
+        });
+      }
+    }
+  );
+};
+
 exports.addData = async function (req, res, next) {
   // Validate request parameters, queries using express-validator
   const errors = validationResult(req);

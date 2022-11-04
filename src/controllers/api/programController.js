@@ -147,8 +147,9 @@ exports.editData = async function (req, res, next) {
       });
       var image_url = requrl + "/public/images/no-image.jpg";
       var updData = {
+        exercise_ids: req.body.exercise_ids,
         name: req.body.programme_name,
-        description: req.body.description,
+        description: req.body.description ? req.body.description : '',
         image: image_url,
         // last_login: dateTime,
       };

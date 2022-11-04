@@ -330,6 +330,19 @@ router.post(
 );
 
 router.post(
+  "/get-sub-category",
+  auth.isAuthorized,
+  [
+    check("category_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  SubCategoryController.getSubCatData
+);
+
+router.post(
   "/add-sub-category",
   auth.isAuthorized,
   [
@@ -483,6 +496,19 @@ router.post(
       .escape(),
   ],
   ExerciseController.viewData
+);
+
+router.post(
+  "/get-exercises",
+  auth.isAuthorized,
+  [
+    check("subcategory_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  ExerciseController.getExerciseData
 );
 
 router.post(

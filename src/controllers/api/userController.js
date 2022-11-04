@@ -20,6 +20,7 @@ const { check, validationResult } = require("express-validator");
 var crypto = require("crypto");
 var randId = crypto.randomBytes(20).toString("hex");
 const multer = require("multer");
+const url = require("url");
 
 //functions
 function generateToken(user) {

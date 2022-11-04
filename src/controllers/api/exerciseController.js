@@ -97,6 +97,7 @@ exports.addData = async function (req, res, next) {
         equipment_ids: req.body.equipment_ids, //json
         name: req.body.exercise_name,
         description: req.body.description,
+        default_time: req.body.default_time,
         image: image_url,
         added_dtime: dateTime,
       });
@@ -119,6 +120,38 @@ exports.addData = async function (req, res, next) {
         });
     }
   });
+};
+
+exports.getExerciseData = async function (req, res, next) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      status: "0",
+      message: "Validation error!",
+      respdata: errors.array(),
+    });
+  }
+
+  Exercise.find({
+    subcategory_id: { $regex: "/," + req.body.category_id + ",/" },
+  }).then(
+    // Exercise.find({ category_ids: new RegExp("/," + req.body.category_id + ",/") }).then(
+    (exercise) => {
+      if (!exercise) {
+        res.status(404).json({
+          status: "0",
+          message: "Not found!",
+          respdata: {},
+        });
+      } else {
+        res.status(200).json({
+          status: "1",
+          message: "Found!",
+          respdata: exercise,
+        });
+      }
+    }
+  );
 };
 
 exports.editData = async function (req, res, next) {
@@ -147,7 +180,7 @@ exports.editData = async function (req, res, next) {
         // pathname: req.originalUrl,
       });
       var image_url = requrl + "/public/images/no-image.jpg";
-      
+
       var updData = {
         category_ids: req.body.category_ids, //json
         equipment_ids: req.body.equipment_ids, //json
