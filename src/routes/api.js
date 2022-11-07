@@ -613,6 +613,11 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
+    check("exercise_my_time", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
     check("programme_name", "This is a required field!")
       .not()
       .isEmpty()
@@ -632,6 +637,16 @@ router.post(
   "/edit-programme",
   auth.isAuthorized,
   [
+    check("exercise_ids", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("exercise_my_time", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
     check("programme_id", "This is a required field!")
       .not()
       .isEmpty()
