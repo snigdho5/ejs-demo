@@ -186,6 +186,7 @@ exports.editData = async function (req, res, next) {
         equipment_ids: req.body.equipment_ids, //json
         name: req.body.exercise_name,
         description: req.body.description,
+        default_time: req.body.default_time,
         image: image_url,
         // last_login: dateTime,
       };
