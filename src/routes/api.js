@@ -599,7 +599,21 @@ router.post(
 
 //Programme
 
-router.get("/programmes", auth.isAuthorized, ProgramController.getData);
+// router.get("/programmes", auth.isAuthorized, ProgramController.getData);
+
+router.post(
+  "/programmes",
+  auth.isAuthorized,
+  [
+    check("exc_type", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape()
+      .isIn(["admin", "user"]),
+  ],
+  ProgramController.getData
+);
 
 router.post(
   "/view-programme",
@@ -618,6 +632,11 @@ router.post(
   "/add-programme",
   auth.isAuthorized,
   [
+    check("user_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
     check("exercise_ids", "This is a required field!")
       .not()
       .isEmpty()

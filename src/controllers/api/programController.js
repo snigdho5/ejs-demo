@@ -23,7 +23,7 @@ var ObjectId = require("mongodb").ObjectId;
 exports.getData = async function (req, res, next) {
   // Validate request parameters, queries using express-validator
 
-  Program.find().then((program) => {
+  Program.find({ exc_type: req.body.exc_type }).then((program) => {
     if (!program) {
       res.status(404).json({
         status: "0",
@@ -100,6 +100,8 @@ exports.addData = async function (req, res, next) {
         description: req.body.description ? req.body.description : "na",
         image: image_url,
         added_dtime: dateTime,
+        user_id: req.body.user_id,
+        exc_type: "user",
       });
 
       newPro
