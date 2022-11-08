@@ -17,6 +17,7 @@ const dateTime = moment().format("YYYY-MM-DD h:mm:ss");
 const auth = require("../../middlewares/auth");
 const { check, validationResult } = require("express-validator");
 const url = require("url");
+var ObjectId = require("mongodb").ObjectId;
 
 //methods
 exports.getData = async function (req, res, next) {
@@ -184,32 +185,22 @@ exports.deleteData = async function (req, res, next) {
     });
   }
 
-  Equipment.findOne({ _id: req.body.equipment_id }).then((equipment) => {
-    if (!equipment) {
-      res.status(404).json({
-        status: "0",
-        message: "Not found!",
-        respdata: {},
-      });
-    } else {
-      //delete
-      // try {
-      Equipment.deleteOne({ _id: req.body.equipment_id });
-
-      Equipment.remove({ _id: req.body.equipment_id });
-
-      // } catch (e) {
-      //   return res.status(404).json({
-      //     status: "0",
-      //     message: "Error!",
-      //     respdata: e,
-      //   });
-      // }
-      res.status(200).json({
-        status: "1",
-        message: "Deleted!",
-        respdata: equipment,
-      });
+  Equipment.findByIdAndDelete({ _id: ObjectId(req.body.equipment_id) }).then(
+    (equipment) => {
+      if (!equipment) {
+        res.status(404).json({
+          status: "0",
+          message: "Not found!",
+          respdata: {},
+        });
+      } else {
+        //delete
+        res.status(200).json({
+          status: "1",
+          message: "Deleted!",
+          respdata: equipment,
+        });
+      }
     }
-  });
+  );
 };

@@ -525,7 +525,12 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
-    check("category_ids", "This is a required field!")
+    check("category_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("sub_category_ids", "This is a required field!")
       .not()
       .isEmpty()
       .trim()
@@ -559,7 +564,12 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
-    check("category_ids", "This is a required field!")
+    check("category_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("sub_category_ids", "This is a required field!")
       .not()
       .isEmpty()
       .trim()
@@ -575,7 +585,7 @@ router.post(
 );
 
 router.post(
-  "/delete-equipment",
+  "/delete-exercise",
   auth.isAuthorized,
   [
     check("exercise_id", "This is a required field!")

@@ -16,6 +16,7 @@ const rounds = 10;
 const dateTime = moment().format("YYYY-MM-DD h:mm:ss");
 const auth = require("../../middlewares/auth");
 const { check, validationResult } = require("express-validator");
+var ObjectId = require("mongodb").ObjectId;
 const url = require("url");
 
 //methods
@@ -93,8 +94,9 @@ exports.addData = async function (req, res, next) {
       var image_url = requrl + "/public/images/no-image.jpg";
 
       const newCat = Exercise({
-        category_ids: req.body.category_ids, //json
-        equipment_ids: req.body.equipment_ids, //json
+        category_id: req.body.category_id,
+        equipment_ids: req.body.equipment_ids,
+        sub_category_ids: req.body.sub_category_ids,
         name: req.body.exercise_name,
         description: req.body.description,
         default_time: req.body.default_time,
@@ -182,8 +184,9 @@ exports.editData = async function (req, res, next) {
       var image_url = requrl + "/public/images/no-image.jpg";
 
       var updData = {
-        category_ids: req.body.category_ids, //json
-        equipment_ids: req.body.equipment_ids, //json
+        category_id: req.body.category_id,
+        equipment_ids: req.body.equipment_ids,
+        sub_category_ids: req.body.sub_category_ids,
         name: req.body.exercise_name,
         description: req.body.description,
         default_time: req.body.default_time,
@@ -222,32 +225,22 @@ exports.deleteData = async function (req, res, next) {
     });
   }
 
-  Exercise.findOne({ _id: req.body.exercise_id }).then((exercise) => {
-    if (!exercise) {
-      res.status(404).json({
-        status: "0",
-        message: "Not found!",
-        respdata: {},
-      });
-    } else {
-      //delete
-      // try {
-      Exercise.deleteOne({ _id: req.body.exercise_id });
-
-      Exercise.remove({ _id: req.body.exercise_id });
-
-      // } catch (e) {
-      //   return res.status(404).json({
-      //     status: "0",
-      //     message: "Error!",
-      //     respdata: e,
-      //   });
-      // }
-      res.status(200).json({
-        status: "1",
-        message: "Deleted!",
-        respdata: exercise,
-      });
+  Exercise.findByIdAndDelete({ _id: ObjectId(req.body.exercise_id) }).then(
+    (exercise) => {
+      if (!exercise) {
+        res.status(404).json({
+          status: "0",
+          message: "Not found!",
+          respdata: {},
+        });
+      } else {
+        //delete
+        res.status(200).json({
+          status: "1",
+          message: "Deleted!",
+          respdata: exercise,
+        });
+      }
     }
-  });
+  );
 };
