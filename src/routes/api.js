@@ -616,6 +616,19 @@ router.post(
 );
 
 router.post(
+  "/user-programmes",
+  auth.isAuthorized,
+  [
+    check("user_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  ProgramController.getUserData
+);
+
+router.post(
   "/view-programme",
   auth.isAuthorized,
   [
