@@ -17,6 +17,7 @@ const SubCategoryController = require("../controllers/api/subCategoryController"
 const ProgramController = require("../controllers/api/programController");
 const EquipmentController = require("../controllers/api/equipmentController");
 const ExerciseController = require("../controllers/api/exerciseController");
+const TravisController = require("../controllers/api/travisController");
 
 // const helper = require("../helpers/helper");
 //others
@@ -764,5 +765,29 @@ router.post("/add-setting", (req, res) => {
     }
   });
 });
+
+router.post(
+  "/add-travis-contact",
+  auth.isAuthorized,
+  [
+    check("user_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("name", "This is a required field!").not().isEmpty().trim().escape(),
+    check("phone", "This is a required field!").not().isEmpty().trim().escape(),
+    check("email", "This is a required field!").not().isEmpty().trim().escape(),
+    check("message", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  TravisController.addData
+);
+
+
+router.get("/travis-contacts", auth.isAuthorized, TravisController.getData);
 
 module.exports = router;
