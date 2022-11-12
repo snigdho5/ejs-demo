@@ -18,6 +18,7 @@ const ProgramController = require("../controllers/api/programController");
 const EquipmentController = require("../controllers/api/equipmentController");
 const ExerciseController = require("../controllers/api/exerciseController");
 const TravisController = require("../controllers/api/travisController");
+const SearchController = require("../controllers/api/searchController");
 
 // const helper = require("../helpers/helper");
 //others
@@ -787,7 +788,20 @@ router.post(
   TravisController.addData
 );
 
-
 router.get("/travis-contacts", auth.isAuthorized, TravisController.getData);
+
+router.post(
+  "/global-search",
+  auth.isAuthorized,
+  [
+    check("search", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("type", "This is a required field!").not().isEmpty().trim().escape(),
+  ],
+  SearchController.searchData
+);
 
 module.exports = router;
