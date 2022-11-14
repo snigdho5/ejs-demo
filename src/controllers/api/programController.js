@@ -22,6 +22,14 @@ var ObjectId = require("mongodb").ObjectId;
 //methods
 exports.getData = async function (req, res, next) {
   // Validate request parameters, queries using express-validator
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      status: "0",
+      message: "Validation error!",
+      respdata: errors.array(),
+    });
+  }
 
   Program.find({ exc_type: req.body.exc_type }).then((program) => {
     if (!program) {

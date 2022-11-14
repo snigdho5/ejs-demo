@@ -41,6 +41,7 @@ router.post(
   [
     check("email", "Email length should be 10 to 30 characters!")
       .isEmail()
+      .normalizeEmail()
       .isLength({ min: 10, max: 30 }),
     check("password", "Password length should be 8 to 10 characters!").isLength(
       {
@@ -93,6 +94,7 @@ router.post(
   [
     check("email", "Email length should be 10 to 30 characters")
       .isEmail()
+      .normalizeEmail()
       .isLength({ min: 10, max: 30 }),
     check("password", "Password length should be 8 to 10 characters").isLength({
       min: 8,
@@ -612,7 +614,8 @@ router.post(
       .isEmpty()
       .trim()
       .escape()
-      .isIn(["admin", "user"]),
+      .isIn(["admin", "user"])
+      .withMessage("Type mismatch!"),
   ],
   ProgramController.getData
 );
@@ -778,7 +781,13 @@ router.post(
       .escape(),
     check("name", "This is a required field!").not().isEmpty().trim().escape(),
     check("phone", "This is a required field!").not().isEmpty().trim().escape(),
-    check("email", "This is a required field!").not().isEmpty().trim().escape(),
+    check("email", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape()
+      .isEmail()
+      .normalizeEmail(),
     check("message", "This is a required field!")
       .not()
       .isEmpty()
@@ -799,7 +808,13 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
-    check("type", "This is a required field!").not().isEmpty().trim().escape(),
+    check("type", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape()
+      .isIn(["category", "subcategory", "equipment", "exercise", "program"])
+      .withMessage("Type mismatch!"),
   ],
   SearchController.searchData
 );
