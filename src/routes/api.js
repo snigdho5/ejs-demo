@@ -544,6 +544,16 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
+    check("default_time", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("video_url", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
     // check("image", "This is a required field!").not().isEmpty().trim().escape(),
   ],
   ExerciseController.addData
@@ -579,6 +589,16 @@ router.post(
       .trim()
       .escape(),
     check("equipment_ids", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("default_time", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("video_url", "This is a required field!")
       .not()
       .isEmpty()
       .trim()

@@ -33,6 +33,10 @@ const model = mongoose.Schema({
     type: String,
     required: true,
   },
+  video_url: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = new mongoose.model("mt_exercises", model);

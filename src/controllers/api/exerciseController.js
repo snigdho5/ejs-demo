@@ -100,6 +100,7 @@ exports.addData = async function (req, res, next) {
         name: req.body.exercise_name,
         description: req.body.description,
         default_time: req.body.default_time,
+        video_url: req.body.video_url,
         image: image_url,
         added_dtime: dateTime,
       });
@@ -190,6 +191,7 @@ exports.editData = async function (req, res, next) {
         name: req.body.exercise_name,
         description: req.body.description,
         default_time: req.body.default_time,
+        video_url: req.body.video_url,
         image: image_url,
         // last_login: dateTime,
       };
