@@ -53,6 +53,10 @@ const model = mongoose.Schema({
     type: String,
     required: true,
   },
+  trial_end_date: {
+    type: String,
+    required: true,
+  },
   last_login: {
     type: String,
     required: true,

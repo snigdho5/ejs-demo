@@ -14,6 +14,7 @@ const jwt = require("jsonwebtoken");
 const tokenSecret = "a2sd#Fs43d4G3524Kh";
 const rounds = 10;
 const dateTime = moment().format("YYYY-MM-DD h:mm:ss");
+const today = moment().format("YYYY-MM-DD");
 const auth = require("../../middlewares/auth");
 const { check, validationResult } = require("express-validator");
 // var uuid = require("uuid");
@@ -75,6 +76,9 @@ exports.signUp = async function (req, res, next) {
     } else {
       // const token = generateToken(req.body);
 
+      var trial_date = moment(today, "YYYY-MM-DD").add(14, "days");
+      trial_date = trial_date.format("YYYY-MM-DD");
+
       Users.findOne({ email: req.body.email }).then((user) => {
         if (!user) {
           const newUser = Users({
@@ -94,6 +98,7 @@ exports.signUp = async function (req, res, next) {
             last_login: "na",
             last_logout: "na",
             created_dtime: dateTime,
+            trial_end_date: trial_date,
             image: "na",
           });
 

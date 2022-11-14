@@ -193,7 +193,7 @@ exports.editData = async function (req, res, next) {
         default_time: req.body.default_time,
         video_url: req.body.video_url,
         image: image_url,
-        // last_login: dateTime,
+        // edited_dtime: dateTime,
       };
       Exercise.findOneAndUpdate(
         { _id: req.body.exercise_id },
