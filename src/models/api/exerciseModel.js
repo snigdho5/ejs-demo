@@ -37,6 +37,26 @@ const model = mongoose.Schema({
     type: String,
     required: true,
   },
+  weight: {
+    type: String,
+    required: true,
+  },
+  weight_unit: {
+    type: String,
+    required: true,
+  },
+  reps: {
+    type: String,
+    required: true,
+  },
+  sets: {
+    type: String,
+    required: true,
+  },
+  break: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = new mongoose.model("mt_exercises", model);

@@ -275,6 +275,7 @@ exports.editProfile = async function (req, res, next) {
         country: req.body.country,
         goal: req.body.goal,
         hear_from: req.body.hear_from,
+        trial_end_date: req.body.trial_end_date,
         // last_login: dateTime,
       };
       Users.findOneAndUpdate(

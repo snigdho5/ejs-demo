@@ -103,6 +103,11 @@ exports.addData = async function (req, res, next) {
         video_url: req.body.video_url,
         image: image_url,
         added_dtime: dateTime,
+        weight: req.body.weight,
+        weight_unit: req.body.weight_unit,
+        reps: req.body.reps,
+        sets: req.body.sets,
+        break: req.body.break,
       });
 
       newCat
@@ -193,6 +198,11 @@ exports.editData = async function (req, res, next) {
         default_time: req.body.default_time,
         video_url: req.body.video_url,
         image: image_url,
+        weight: req.body.weight,
+        weight_unit: req.body.weight_unit,
+        reps: req.body.reps,
+        sets: req.body.sets,
+        break: req.body.break,
         // edited_dtime: dateTime,
       };
       Exercise.findOneAndUpdate(

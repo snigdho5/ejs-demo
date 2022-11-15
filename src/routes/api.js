@@ -172,6 +172,7 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
+    // check("trial_end_date", "This is a required field!").not().isEmpty().trim().escape(),
   ],
   UserController.editProfile
 );
@@ -194,18 +195,7 @@ router.post(
   UserController.uploadImage
 );
 
-router.post(
-  "/settings",
-  auth.isAuthorized,
-  [
-    check("user_id", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
-  ],
-  OthersController.getSetting
-);
+router.get("/settings", OthersController.getSetting);
 
 router.post(
   "/logout",
@@ -554,6 +544,19 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
+    check("weight", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("weight_unit", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("reps", "This is a required field!").not().isEmpty().trim().escape(),
+    check("sets", "This is a required field!").not().isEmpty().trim().escape(),
+    check("break", "This is a required field!").not().isEmpty().trim().escape(),
     // check("image", "This is a required field!").not().isEmpty().trim().escape(),
   ],
   ExerciseController.addData
@@ -603,6 +606,19 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
+    check("weight", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("weight_unit", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("reps", "This is a required field!").not().isEmpty().trim().escape(),
+    check("sets", "This is a required field!").not().isEmpty().trim().escape(),
+    check("break", "This is a required field!").not().isEmpty().trim().escape(),
     // check("image", "This is a required field!").not().isEmpty().trim().escape(),
   ],
   ExerciseController.editData
