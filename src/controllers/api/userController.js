@@ -22,6 +22,18 @@ var crypto = require("crypto");
 var randId = crypto.randomBytes(20).toString("hex");
 const multer = require("multer");
 const url = require("url");
+const nodemailer = require("nodemailer");
+const smtpUser = "snigdho.lnsel@gmail.com";
+
+const transporter = nodemailer.createTransport({
+  port: 465, // true for 465, false for other ports
+  host: "smtp.gmail.com",
+  auth: {
+    user: smtpUser,
+    pass: "onaonfajcxjjwoow",
+  },
+  secure: true,
+});
 
 //functions
 function generateToken(user) {
@@ -41,6 +53,10 @@ function decodeBase64Image(dataString) {
   }
 
   return response;
+}
+
+function randNumber(min, max) {
+  return Math.floor(Math.random() * (max - min) + min);
 }
 
 //methods
@@ -504,6 +520,146 @@ exports.changePassword = async function (req, res, next) {
           });
         }
       });
+    }
+  });
+};
+
+exports.forgotPassword = async function (req, res, next) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      status: "0",
+      message: "Validation error!",
+      respdata: errors.array(),
+    });
+  }
+
+  Users.findOne({ email: req.body.email }).then((user) => {
+    if (!user)
+      res.status(404).json({
+        status: "0",
+        message: "User not found!",
+        respdata: {},
+      });
+    else {
+      var otp = randNumber(1000, 2000);
+      // console.log(otp);
+
+      //email
+
+      const mailData = {
+        from: smtpUser, // sender address
+        // to: user.email, // list of receivers
+        to: "sandip@lnsel.net", // list of receivers
+        subject: "UK Fitness Hub - Forgot password OTP",
+        text: "Server Email!",
+        html:
+          "Hey " +
+          user.name +
+          ", <br> <p> Please use this OTP : <b>" +
+          otp +
+          "</b> to reset your password! </p>",
+      };
+
+      transporter.sendMail(mailData, function (err, info) {
+        if (err) console.log(err);
+        else console.log(info);
+      });
+
+      var updData = {
+        forget_otp: otp,
+      };
+      Users.findOneAndUpdate(
+        { _id: user._id },
+        { $set: updData },
+        { upsert: true },
+        function (err, doc) {
+          if (err) {
+            throw err;
+          } else {
+            Users.findOne({ _id: user._id }).then((user) => {
+              res.status(200).json({
+                status: "1",
+                message: "OTP sent!",
+                respdata: user,
+              });
+            });
+          }
+        }
+      );
+    }
+  });
+};
+
+exports.resetPassword = async function (req, res, next) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      status: "0",
+      message: "Validation error!",
+      respdata: errors.array(),
+    });
+  }
+
+  Users.findOne({ _id: req.body.user_id }).then((user) => {
+    if (!user)
+      res.status(404).json({
+        status: "0",
+        message: "User not found!",
+        respdata: {},
+      });
+    else {
+      // Users.updateOne({ _id: user._id }, { $set: updData });
+
+      if (user.forget_otp == req.body.otp) {
+        bcrypt.hash(req.body.new_password, rounds, (error, hash) => {
+          bcrypt.compare(req.body.repeat_password, hash, (error, match) => {
+            if (error) {
+              res.status(400).json({
+                status: "0",
+                message: "Error!",
+                respdata: error,
+              });
+            } else if (match) {
+              var updData = {
+                password: hash,
+                forget_otp: "0",
+                // last_login: dateTime,
+              };
+              Users.findOneAndUpdate(
+                { _id: req.body.user_id },
+                { $set: updData },
+                { upsert: true },
+                function (err, doc) {
+                  if (err) {
+                    throw err;
+                  } else {
+                    Users.findOne({ _id: req.body.user_id }).then((user) => {
+                      res.status(200).json({
+                        status: "1",
+                        message: "Successfully updated!",
+                        respdata: user,
+                      });
+                    });
+                  }
+                }
+              );
+            } else {
+              res.status(400).json({
+                status: "0",
+                message: "New and Repeat password does not match!",
+                respdata: {},
+              });
+            }
+          });
+        });
+      } else {
+        res.status(400).json({
+          status: "0",
+          message: "OTP does not match!",
+          respdata: {},
+        });
+      }
     }
   });
 };

@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
+const nodemailer = require('nodemailer');
 var path = require("path");
 app.use("/public", express.static(path.join(__dirname, "public")));
 

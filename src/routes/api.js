@@ -94,7 +94,6 @@ router.post(
   [
     check("email", "Email length should be 10 to 30 characters")
       .isEmail()
-      .normalizeEmail()
       .isLength({ min: 10, max: 30 }),
     check("password", "Password length should be 8 to 10 characters").isLength({
       min: 8,
@@ -186,11 +185,7 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
-    check("img_base64", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
+    check("img_base64", "This is a required field!").not().isEmpty(),
   ],
   UserController.uploadImage
 );
@@ -211,6 +206,39 @@ router.post(
 );
 
 router.post(
+  "/forgot-password",
+  [check("email", "This is a required field!").not().isEmpty().isEmail()],
+  UserController.forgotPassword
+);
+
+router.post(
+  "/reset-password",
+  [
+    check("user_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("otp", "This is a required field!").not().isEmpty(),
+    check(
+      "new_password",
+      "Password length should be 8 to 10 characters!"
+    ).isLength({
+      min: 8,
+      max: 10,
+    }),
+    check(
+      "repeat_password",
+      "Password length should be 8 to 10 characters!"
+    ).isLength({
+      min: 8,
+      max: 10,
+    }),
+  ],
+  UserController.resetPassword
+);
+
+router.post(
   "/change-password",
   auth.isAuthorized,
   [
@@ -219,16 +247,20 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
-    check("old_password", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
-    check("new_password", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
+    check(
+      "old_password",
+      "Password length should be 8 to 10 characters!"
+    ).isLength({
+      min: 8,
+      max: 10,
+    }),
+    check(
+      "new_password",
+      "Password length should be 8 to 10 characters!"
+    ).isLength({
+      min: 8,
+      max: 10,
+    }),
   ],
   UserController.changePassword
 );
@@ -539,11 +571,7 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
-    check("video_url", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
+    check("video_url", "This is a required field!").not().isEmpty(),
     check("weight", "This is a required field!")
       .not()
       .isEmpty()
@@ -622,6 +650,29 @@ router.post(
     // check("image", "This is a required field!").not().isEmpty().trim().escape(),
   ],
   ExerciseController.editData
+);
+
+router.post(
+  "/add-exercise-personal-best",
+  auth.isAuthorized,
+  [
+    check("user_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("exercise_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("weight", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  ExerciseController.addExPersonalBest
 );
 
 router.post(
@@ -822,8 +873,7 @@ router.post(
       .isEmpty()
       .trim()
       .escape()
-      .isEmail()
-      .normalizeEmail(),
+      .isEmail(),
     check("message", "This is a required field!")
       .not()
       .isEmpty()

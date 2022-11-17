@@ -59,7 +59,6 @@ const model = mongoose.Schema({
   },
   last_login: {
     type: String,
-    required: true,
   },
   image: {
     type: String,
@@ -67,7 +66,9 @@ const model = mongoose.Schema({
   },
   last_logout: {
     type: String,
-    required: true,
+  },
+  forget_otp: {
+    type: String,
   },
 });
 

@@ -8,6 +8,7 @@ const path = require("path");
 const fs = require("fs");
 const mime = require("mime");
 const Exercise = require("../../models/api/exerciseModel");
+const ExPersonalBest = require("../../models/api/exercisePersonalBestModel");
 // const helper = require("../helpers/helper");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -255,4 +256,84 @@ exports.deleteData = async function (req, res, next) {
       }
     }
   );
+};
+
+exports.addExPersonalBest = async function (req, res, next) {
+  // Validate request parameters, queries using express-validator
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      status: "0",
+      message: "Validation error!",
+      respdata: errors.array(),
+    });
+  }
+
+  // ExPersonalBest.findOne({ name: req.body.exercise_name }).then((data) => {
+  //   if (data) {
+  //     res.status(404).json({
+  //       status: "0",
+  //       message: "Already exists!",
+  //       respdata: {},
+  //     });
+  //   } else {
+  const newData = ExPersonalBest({
+    user_id: req.body.user_id,
+    exercise_id: req.body.exercise_id,
+    weight: req.body.weight,
+    added_dtime: dateTime,
+  });
+
+  newData
+    .save()
+    .then((data) => {
+      //get data for personal best
+      ExPersonalBest.findOne({
+        user_id: req.body.user_id,
+        exercise_id: req.body.exercise_id,
+      }).then((exdata) => {
+        if (!exdata) {
+          res.status(404).json({
+            status: "0",
+            message: "Added!",
+            respdata: {
+              message: "First time!",
+              new_record: false,
+              respdata: data,
+            },
+          });
+        } else {
+          if (req.body.weight > exdata.weight) {
+            res.status(200).json({
+              status: "1",
+              message: "Added!",
+              respdata: {
+                message: "New Record!",
+                new_record: true,
+                respdata: data,
+              },
+            });
+          } else {
+            res.status(200).json({
+              status: "1",
+              message: "Added!",
+              respdata: {
+                message: "No new Record!",
+                new_record: false,
+                respdata: data,
+              },
+            });
+          }
+        }
+      });
+    })
+    .catch((error) => {
+      res.status(400).json({
+        status: "0",
+        message: "Error!",
+        respdata: error,
+      });
+    });
+  //   }
+  // });
 };
