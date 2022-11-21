@@ -10,7 +10,7 @@ const model = mongoose.Schema({
     required: true,
   },
   weight: {
-    type: String,
+    type: Number,
     required: true,
   },
   added_dtime: {

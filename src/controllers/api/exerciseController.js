@@ -269,71 +269,80 @@ exports.addExPersonalBest = async function (req, res, next) {
     });
   }
 
-  // ExPersonalBest.findOne({ name: req.body.exercise_name }).then((data) => {
-  //   if (data) {
-  //     res.status(404).json({
-  //       status: "0",
-  //       message: "Already exists!",
-  //       respdata: {},
-  //     });
-  //   } else {
-  const newData = ExPersonalBest({
+  ExPersonalBest.findOne({
     user_id: req.body.user_id,
     exercise_id: req.body.exercise_id,
-    weight: req.body.weight,
-    added_dtime: dateTime,
-  });
-
-  newData
-    .save()
-    .then((data) => {
-      //get data for personal best
-      ExPersonalBest.findOne({
+  })
+    .sort({ weight: -1 })
+    .then((exdata) => {
+      // if (exdata) {
+      //   res.status(404).json({
+      //     status: "0",
+      //     message: "Already exists!",
+      //     respdata: {},
+      //   });
+      // } else {
+      const newData = ExPersonalBest({
         user_id: req.body.user_id,
         exercise_id: req.body.exercise_id,
-      }).then((exdata) => {
-        if (!exdata) {
-          res.status(404).json({
-            status: "0",
-            message: "Added!",
-            respdata: {
-              message: "First time!",
-              new_record: false,
-              respdata: data,
-            },
-          });
-        } else {
-          if (req.body.weight > exdata.weight) {
-            res.status(200).json({
-              status: "1",
+        weight: req.body.weight,
+        added_dtime: dateTime,
+      });
+
+      newData
+        .save()
+        .then((data) => {
+          //get data for personal best
+          // ExPersonalBest.findOne({
+          //   user_id: req.body.user_id,
+          //   exercise_id: req.body.exercise_id,
+          // })
+          //   .sort({ weight: -1 })
+          //   .then((exdata) => {
+          // console.log("exdata.weight: " + exdata.weight);
+          // console.log("req.body.weight: " + req.body.weight);
+          if (!exdata) {
+            res.status(404).json({
+              status: "0",
               message: "Added!",
               respdata: {
-                message: "New Record!",
-                new_record: true,
-                respdata: data,
-              },
-            });
-          } else {
-            res.status(200).json({
-              status: "1",
-              message: "Added!",
-              respdata: {
-                message: "No new Record!",
+                message: "First time!",
                 new_record: false,
                 respdata: data,
               },
             });
+          } else {
+            if (req.body.weight > exdata.weight) {
+              res.status(200).json({
+                status: "1",
+                message: "Added!",
+                respdata: {
+                  message: "New Record!",
+                  new_record: true,
+                  respdata: data,
+                },
+              });
+            } else {
+              res.status(200).json({
+                status: "1",
+                message: "Added!",
+                respdata: {
+                  message: "No new Record!",
+                  new_record: false,
+                  respdata: data,
+                },
+              });
+            }
           }
-        }
-      });
-    })
-    .catch((error) => {
-      res.status(400).json({
-        status: "0",
-        message: "Error!",
-        respdata: error,
-      });
+          // });
+        })
+        .catch((error) => {
+          res.status(400).json({
+            status: "0",
+            message: "Error!",
+            respdata: error,
+          });
+        });
+      // }
     });
-  //   }
-  // });
 };

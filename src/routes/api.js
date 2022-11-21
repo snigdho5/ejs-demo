@@ -669,7 +669,8 @@ router.post(
       .not()
       .isEmpty()
       .trim()
-      .escape(),
+      .escape()
+      .isLength({ min: 2, max: 3 }),
   ],
   ExerciseController.addExPersonalBest
 );
