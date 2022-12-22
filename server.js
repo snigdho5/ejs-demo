@@ -5,13 +5,11 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
 var path = require("path");
 app.use("/public", express.static(path.join(__dirname, "public")));
 
 app.locals.siteName = "UK Fitness Hub";
-
-
 
 //database
 const mongoose = require("mongoose");
@@ -21,6 +19,7 @@ const dbURI =
 
 app.use(express.json());
 
+mongoose.set("strictQuery", true);
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 mongoose.Promise = global.Promise;
@@ -97,7 +96,6 @@ app.use("/routes", routes); //test
 //   err.status = 404;
 //   next(err);
 // });
-
 
 //Snigdho Upadhyay
 app.listen(port, () => console.log(`App listening on port ${port}!`));
