@@ -905,4 +905,18 @@ router.post(
   SearchController.searchData
 );
 
+
+router.post(
+  "/progress",
+  auth.isAuthorized,
+  [
+    check("user_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  ExerciseController.getProgressData
+);
+
 module.exports = router;
