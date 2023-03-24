@@ -357,6 +357,9 @@ exports.getProgressData = async function (req, res, next) {
     });
   }
 
+  const thisMonth = moment().format("MM");
+  console.log(thisMonth);
+
   Exercise.count(
     { user_id: ObjectId(req.body.user_id) },
     function (err, count) {
