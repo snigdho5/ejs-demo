@@ -919,4 +919,19 @@ router.post(
   ExerciseController.getProgressData
 );
 
+
+
+router.post(
+  "/delete-user",
+  auth.isAuthorized,
+  [
+    check("user_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  UserController.deleteData
+);
+
 module.exports = router;
