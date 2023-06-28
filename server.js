@@ -29,7 +29,7 @@ db.on("error", (err) => {
 });
 db.once("open", () => {
   // console.log(db);
-  console.log(" DB started successfully");
+  console.log("DB started successfully");
 });
 
 // set the view engine to ejs
