@@ -40,13 +40,19 @@
                             <form class="user" action="/create-equipment" method="post">
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="equipment" name="equipment"
-                                            placeholder="Equipment..." value="">
+                                        <input type="text" class="form-control form-control-user" id="equipment_name" name="equipment_name" placeholder="Name" value="" required>
+                                    </div>
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <textarea type="text" class="form-control form-control-user" id="description" name="description" placeholder="Description" required></textarea>
                                     </div>
                                 </div>
                                 <input type="submit" class="btn btn-primary btn-user btn-block" id="btn_equipment" name="btn_equipment" value="Submit">
                             </form>
                             <hr>
+                            <% if(!status){ %>
+                                <h6 style="background-color:aquamarine; align-content: center;">Message: <%= message %></h6>
+                                <p><%# respdata %></p>
+                            <% } %>
                           </div>
                       </div>
                 </div>

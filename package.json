@@ -31,7 +31,9 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "nodejs": "^0.0.0",
+    "nodemailer": "^6.8.0",
     "redis": "^4.3.0",
+    "request": "^2.88.2",
     "select2": "^4.1.0-rc.0"
   },
   "devDependencies": {

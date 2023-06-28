@@ -1,7 +1,11 @@
 const mongoose = require("mongoose");
 
 const model = mongoose.Schema({
-  category_ids: {
+  category_id: {
+    type: String,
+    required: true,
+  },
+  sub_category_ids: {
     type: String,
     required: true,
   },
@@ -22,6 +26,34 @@ const model = mongoose.Schema({
     required: true,
   },
   added_dtime: {
+    type: String,
+    required: true,
+  },
+  default_time: {
+    type: String,
+    required: true,
+  },
+  video_url: {
+    type: String,
+    required: true,
+  },
+  weight: {
+    type: String,
+    required: true,
+  },
+  weight_unit: {
+    type: String,
+    required: true,
+  },
+  reps: {
+    type: String,
+    required: true,
+  },
+  sets: {
+    type: String,
+    required: true,
+  },
+  break: {
     type: String,
     required: true,
   },

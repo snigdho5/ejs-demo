@@ -53,9 +53,12 @@ const model = mongoose.Schema({
     type: String,
     required: true,
   },
-  last_login: {
+  trial_end_date: {
     type: String,
     required: true,
+  },
+  last_login: {
+    type: String,
   },
   image: {
     type: String,
@@ -63,7 +66,9 @@ const model = mongoose.Schema({
   },
   last_logout: {
     type: String,
-    required: true,
+  },
+  forget_otp: {
+    type: String,
   },
 });
 

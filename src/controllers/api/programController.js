@@ -17,12 +17,41 @@ const dateTime = moment().format("YYYY-MM-DD h:mm:ss");
 const auth = require("../../middlewares/auth");
 const { check, validationResult } = require("express-validator");
 const url = require("url");
+var ObjectId = require("mongodb").ObjectId;
 
 //methods
 exports.getData = async function (req, res, next) {
   // Validate request parameters, queries using express-validator
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      status: "0",
+      message: "Validation error!",
+      respdata: errors.array(),
+    });
+  }
 
-  Program.find().then((program) => {
+  Program.find({ exc_type: req.body.exc_type }).then((program) => {
+    if (!program) {
+      res.status(404).json({
+        status: "0",
+        message: "Not found!",
+        respdata: {},
+      });
+    } else {
+      res.status(200).json({
+        status: "1",
+        message: "Found!",
+        respdata: program,
+      });
+    }
+  });
+};
+
+exports.getUserData = async function (req, res, next) {
+  // Validate request parameters, queries using express-validator
+
+  Program.find({ user_id: req.body.user_id }).then((program) => {
     if (!program) {
       res.status(404).json({
         status: "0",
@@ -93,10 +122,14 @@ exports.addData = async function (req, res, next) {
       var image_url = requrl + "/public/images/no-image.jpg";
 
       const newPro = Program({
+        exercise_ids: req.body.exercise_ids,
+        exercise_my_time: req.body.exercise_my_time,
         name: req.body.programme_name,
-        description: req.body.description,
+        description: req.body.description ? req.body.description : "na",
         image: image_url,
         added_dtime: dateTime,
+        user_id: req.body.user_id,
+        exc_type: "user",
       });
 
       newPro
@@ -146,8 +179,10 @@ exports.editData = async function (req, res, next) {
       });
       var image_url = requrl + "/public/images/no-image.jpg";
       var updData = {
+        exercise_ids: req.body.exercise_ids,
+        exercise_my_time: req.body.exercise_my_time,
         name: req.body.programme_name,
-        description: req.body.description,
+        description: req.body.description ? req.body.description : "",
         image: image_url,
         // last_login: dateTime,
       };
@@ -183,32 +218,22 @@ exports.deleteData = async function (req, res, next) {
     });
   }
 
-  Program.findOne({ _id: req.body.programme_id }).then((program) => {
-    if (!program) {
-      res.status(404).json({
-        status: "0",
-        message: "Not found!",
-        respdata: {},
-      });
-    } else {
-      //delete
-      // try {
-      Program.deleteOne({ _id: req.body.programme_id });
-
-      Program.remove({ _id: req.body.programme_id });
-
-      // } catch (e) {
-      //   return res.status(404).json({
-      //     status: "0",
-      //     message: "Error!",
-      //     respdata: e,
-      //   });
-      // }
-      res.status(200).json({
-        status: "1",
-        message: "Deleted!",
-        respdata: program,
-      });
+  Program.findByIdAndDelete({ _id: ObjectId(req.body.programme_id) }).then(
+    (program) => {
+      if (!program) {
+        res.status(404).json({
+          status: "0",
+          message: "Not found!",
+          respdata: {},
+        });
+      } else {
+        //delete
+        res.status(200).json({
+          status: "1",
+          message: "Deleted!",
+          respdata: program,
+        });
+      }
     }
-  });
+  );
 };

@@ -37,14 +37,44 @@
                               <h6 class="m-0 font-weight-bold text-primary">Exercise Details</h6>
                           </div> 
                           <div class="card-body">
-                            <form class="user" action="/create-body-focus" method="post">
+                            <form class="user" action="/create-exercise" method="post">
                                 <div class="form-group row">
-                                    <div class="col-sm-12 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="name" name="name"
-                                            placeholder="Name" value="">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <select class="form-control" name="body_focus" id="body_focus">
+                                            <option value="0" selected>Select Body Focus</option>
+                                            <% if(respdata.category){ %>
+                                                <% respdata.category.forEach(function(value, index) { %> 
+                                                    <option value="<%= value._id %>"><%= value.name %></option>
+                                                <% });  %>
+                                            <% } %> 
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <select class="form-control" name="sub_filter[]" id="sub_filter" multiple="multiple">
+                                            <option value="0" selected>Select Sub Filter</option>
+                                        </select>
                                     </div>
                                 </div>
-                                <input type="submit" class="btn btn-primary btn-user btn-block" id="btn_profile" name="btn_profile" value="Submit">
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <select class="form-control" name="equipments" id="equipments" multiple="multiple">
+                                            <option value="0" selected>Select Equipments</option>
+                                            <% if(respdata.equipment){ %>
+                                                <% respdata.equipment.forEach(function(value, index) { %> 
+                                                    <option value="<%= value._id %>"><%= value.name %></option>
+                                                <% });  %>
+                                            <% } %> 
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-12 mb-3 mb-sm-0">
+                                        <input type="text" class="form-control form-control-user" id="exercise" name="exercise"
+                                            placeholder="Exercise..." value="">
+                                    </div>
+                                </div>
+                                <input type="submit" class="btn btn-primary btn-user btn-block" id="btn_exercise" name="btn_exercise" value="Submit">
                             </form>
                             <hr>
                           </div>

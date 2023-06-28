@@ -8,6 +8,7 @@ const path = require("path");
 const fs = require("fs");
 const mime = require("mime");
 const Exercise = require("../../models/api/exerciseModel");
+const ExPersonalBest = require("../../models/api/exercisePersonalBestModel");
 // const helper = require("../helpers/helper");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -16,6 +17,7 @@ const rounds = 10;
 const dateTime = moment().format("YYYY-MM-DD h:mm:ss");
 const auth = require("../../middlewares/auth");
 const { check, validationResult } = require("express-validator");
+var ObjectId = require("mongodb").ObjectId;
 const url = require("url");
 
 //methods
@@ -93,12 +95,20 @@ exports.addData = async function (req, res, next) {
       var image_url = requrl + "/public/images/no-image.jpg";
 
       const newCat = Exercise({
-        category_ids: req.body.category_ids, //json
-        equipment_ids: req.body.equipment_ids, //json
+        category_id: req.body.category_id,
+        equipment_ids: req.body.equipment_ids,
+        sub_category_ids: req.body.sub_category_ids,
         name: req.body.exercise_name,
         description: req.body.description,
+        default_time: req.body.default_time,
+        video_url: req.body.video_url,
         image: image_url,
         added_dtime: dateTime,
+        weight: req.body.weight,
+        weight_unit: req.body.weight_unit,
+        reps: req.body.reps,
+        sets: req.body.sets,
+        break: req.body.break,
       });
 
       newCat
@@ -119,6 +129,38 @@ exports.addData = async function (req, res, next) {
         });
     }
   });
+};
+
+exports.getExerciseData = async function (req, res, next) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      status: "0",
+      message: "Validation error!",
+      respdata: errors.array(),
+    });
+  }
+
+  Exercise.find({
+    subcategory_id: { $regex: "/," + req.body.category_id + ",/" },
+  }).then(
+    // Exercise.find({ category_ids: new RegExp("/," + req.body.category_id + ",/") }).then(
+    (exercise) => {
+      if (!exercise) {
+        res.status(404).json({
+          status: "0",
+          message: "Not found!",
+          respdata: {},
+        });
+      } else {
+        res.status(200).json({
+          status: "1",
+          message: "Found!",
+          respdata: exercise,
+        });
+      }
+    }
+  );
 };
 
 exports.editData = async function (req, res, next) {
@@ -147,14 +189,22 @@ exports.editData = async function (req, res, next) {
         // pathname: req.originalUrl,
       });
       var image_url = requrl + "/public/images/no-image.jpg";
-      
+
       var updData = {
-        category_ids: req.body.category_ids, //json
-        equipment_ids: req.body.equipment_ids, //json
+        category_id: req.body.category_id,
+        equipment_ids: req.body.equipment_ids,
+        sub_category_ids: req.body.sub_category_ids,
         name: req.body.exercise_name,
         description: req.body.description,
+        default_time: req.body.default_time,
+        video_url: req.body.video_url,
         image: image_url,
-        // last_login: dateTime,
+        weight: req.body.weight,
+        weight_unit: req.body.weight_unit,
+        reps: req.body.reps,
+        sets: req.body.sets,
+        break: req.body.break,
+        // edited_dtime: dateTime,
       };
       Exercise.findOneAndUpdate(
         { _id: req.body.exercise_id },
@@ -188,32 +238,148 @@ exports.deleteData = async function (req, res, next) {
     });
   }
 
-  Exercise.findOne({ _id: req.body.exercise_id }).then((exercise) => {
-    if (!exercise) {
-      res.status(404).json({
-        status: "0",
-        message: "Not found!",
-        respdata: {},
-      });
-    } else {
-      //delete
-      // try {
-      Exercise.deleteOne({ _id: req.body.exercise_id });
-
-      Exercise.remove({ _id: req.body.exercise_id });
-
-      // } catch (e) {
-      //   return res.status(404).json({
-      //     status: "0",
-      //     message: "Error!",
-      //     respdata: e,
-      //   });
-      // }
-      res.status(200).json({
-        status: "1",
-        message: "Deleted!",
-        respdata: exercise,
-      });
+  Exercise.findByIdAndDelete({ _id: ObjectId(req.body.exercise_id) }).then(
+    (exercise) => {
+      if (!exercise) {
+        res.status(404).json({
+          status: "0",
+          message: "Not found!",
+          respdata: {},
+        });
+      } else {
+        //delete
+        res.status(200).json({
+          status: "1",
+          message: "Deleted!",
+          respdata: exercise,
+        });
+      }
     }
-  });
+  );
+};
+
+exports.addExPersonalBest = async function (req, res, next) {
+  // Validate request parameters, queries using express-validator
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      status: "0",
+      message: "Validation error!",
+      respdata: errors.array(),
+    });
+  }
+
+  ExPersonalBest.findOne({
+    user_id: req.body.user_id,
+    exercise_id: req.body.exercise_id,
+  })
+    .sort({ weight: -1 })
+    .then((exdata) => {
+      // if (exdata) {
+      //   res.status(404).json({
+      //     status: "0",
+      //     message: "Already exists!",
+      //     respdata: {},
+      //   });
+      // } else {
+      const newData = ExPersonalBest({
+        user_id: req.body.user_id,
+        exercise_id: req.body.exercise_id,
+        weight: req.body.weight,
+        added_dtime: dateTime,
+      });
+
+      newData
+        .save()
+        .then((data) => {
+          //get data for personal best
+          // ExPersonalBest.findOne({
+          //   user_id: req.body.user_id,
+          //   exercise_id: req.body.exercise_id,
+          // })
+          //   .sort({ weight: -1 })
+          //   .then((exdata) => {
+          // console.log("exdata.weight: " + exdata.weight);
+          // console.log("req.body.weight: " + req.body.weight);
+          if (!exdata) {
+            res.status(404).json({
+              status: "0",
+              message: "Added!",
+              respdata: {
+                message: "First time!",
+                new_record: false,
+                respdata: data,
+              },
+            });
+          } else {
+            if (req.body.weight > exdata.weight) {
+              res.status(200).json({
+                status: "1",
+                message: "Added!",
+                respdata: {
+                  message: "New Record!",
+                  new_record: true,
+                  respdata: data,
+                },
+              });
+            } else {
+              res.status(200).json({
+                status: "1",
+                message: "Added!",
+                respdata: {
+                  message: "No new Record!",
+                  new_record: false,
+                  respdata: data,
+                },
+              });
+            }
+          }
+          // });
+        })
+        .catch((error) => {
+          res.status(400).json({
+            status: "0",
+            message: "Error!",
+            respdata: error,
+          });
+        });
+      // }
+    });
+};
+
+exports.getProgressData = async function (req, res, next) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      status: "0",
+      message: "Validation error!",
+      respdata: errors.array(),
+    });
+  }
+
+  const thisMonth = moment().format("MM");
+  console.log(thisMonth);
+
+  Exercise.count(
+    { user_id: ObjectId(req.body.user_id) },
+    function (err, count) {
+      if (err) {
+        res.status(404).json({
+          status: "0",
+          message: "Not found!",
+          respdata: {},
+        });
+      } else {
+        res.status(200).json({
+          status: "1",
+          message: "Found!",
+          respdata: {
+            "01": count,
+            "02": count,
+            "03": count,
+          },
+        });
+      }
+    }
+  );
 };

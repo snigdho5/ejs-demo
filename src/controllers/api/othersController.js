@@ -28,7 +28,6 @@ exports.getCountries = async function (req, res, next) {
     });
 };
 
-
 exports.getSetting = async function (req, res, next) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -39,32 +38,31 @@ exports.getSetting = async function (req, res, next) {
     });
   }
 
-  Users.findOne({ _id: req.body.user_id }).then((user) => {
-    if (!user) {
-      res.status(400).json({
-        status: "0",
-        message: "User does not exist!",
-        respdata: {},
-      });
-    } else {
-      AppSettings.find({})
-        .sort({ _id: 1 })
-        .then((sett) => {
-          if (!sett) {
-            res.status(400).json({
-              status: "0",
-              message: "Settings not found!",
-              respdata: {},
-            });
-          } else {
-            res.status(400).json({
-              status: "1",
-              message: "Detalis Found!",
-              respdata: sett,
-            });
-          }
+  // Users.findOne({ _id: req.body.user_id }).then((user) => {
+  // if (!user) {
+  //   res.status(400).json({
+  //     status: "0",
+  //     message: "User does not exist!",
+  //     respdata: {},
+  //   });
+  // } else {
+  AppSettings.find({})
+    .sort({ _id: 1 })
+    .then((sett) => {
+      if (!sett) {
+        res.status(400).json({
+          status: "0",
+          message: "Settings not found!",
+          respdata: {},
         });
-    }
-  });
+      } else {
+        res.status(200).json({
+          status: "1",
+          message: "Details Found!",
+          respdata: sett,
+        });
+      }
+    });
+  // }
+  // });
 };
-

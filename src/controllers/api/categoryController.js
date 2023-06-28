@@ -18,10 +18,10 @@ const auth = require("../../middlewares/auth");
 const { check, validationResult } = require("express-validator");
 var ObjectId = require("mongodb").ObjectId;
 const url = require("url");
+var ObjectId = require("mongodb").ObjectId;
 
 //methods
 exports.getData = async function (req, res, next) {
-
   Category.find().then((category) => {
     if (!category) {
       res.status(404).json({
@@ -184,38 +184,22 @@ exports.deleteData = async function (req, res, next) {
     });
   }
 
-  Category.findOne({ _id: req.body.category_id }).then((category) => {
-    if (!category) {
-      res.status(404).json({
-        status: "0",
-        message: "Not found!",
-        respdata: {},
-      });
-    } else {
-      //delete
-      // try {
-
-      // console.log(ObjectId(req.body.category_id));
-
-      Category.deleteOne(
-        { _id: req.body.category_id },
-        { w: "majority", wtimeout: 100 }
-      );
-
-      // Category.remove({ _id: req.body.category_id });
-
-      // } catch (e) {
-      //   return res.status(404).json({
-      //     status: "0",
-      //     message: "Error!",
-      //     respdata: e,
-      //   });
-      // }
-      res.status(200).json({
-        status: "1",
-        message: "Deleted!",
-        respdata: category,
-      });
+  Category.findByIdAndDelete({ _id: ObjectId(req.body.category_id) }).then(
+    (category) => {
+      if (!category) {
+        res.status(404).json({
+          status: "0",
+          message: "Not found!",
+          respdata: {},
+        });
+      } else {
+        //delete
+        res.status(200).json({
+          status: "1",
+          message: "Deleted!",
+          respdata: category,
+        });
+      }
     }
-  });
+  );
 };

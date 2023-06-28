@@ -17,6 +17,8 @@ const SubCategoryController = require("../controllers/api/subCategoryController"
 const ProgramController = require("../controllers/api/programController");
 const EquipmentController = require("../controllers/api/equipmentController");
 const ExerciseController = require("../controllers/api/exerciseController");
+const TravisController = require("../controllers/api/travisController");
+const SearchController = require("../controllers/api/searchController");
 
 // const helper = require("../helpers/helper");
 //others
@@ -168,6 +170,7 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
+    // check("trial_end_date", "This is a required field!").not().isEmpty().trim().escape(),
   ],
   UserController.editProfile
 );
@@ -181,27 +184,12 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
-    check("img_base64", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
+    check("img_base64", "This is a required field!").not().isEmpty(),
   ],
   UserController.uploadImage
 );
 
-router.post(
-  "/settings",
-  auth.isAuthorized,
-  [
-    check("user_id", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
-  ],
-  OthersController.getSetting
-);
+router.get("/settings", OthersController.getSetting);
 
 router.post(
   "/logout",
@@ -217,6 +205,39 @@ router.post(
 );
 
 router.post(
+  "/forgot-password",
+  [check("email", "This is a required field!").not().isEmpty().isEmail()],
+  UserController.forgotPassword
+);
+
+router.post(
+  "/reset-password",
+  [
+    check("user_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("otp", "This is a required field!").not().isEmpty(),
+    check(
+      "new_password",
+      "Password length should be 8 to 10 characters!"
+    ).isLength({
+      min: 8,
+      max: 10,
+    }),
+    check(
+      "repeat_password",
+      "Password length should be 8 to 10 characters!"
+    ).isLength({
+      min: 8,
+      max: 10,
+    }),
+  ],
+  UserController.resetPassword
+);
+
+router.post(
   "/change-password",
   auth.isAuthorized,
   [
@@ -225,16 +246,20 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
-    check("old_password", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
-    check("new_password", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
+    check(
+      "old_password",
+      "Password length should be 8 to 10 characters!"
+    ).isLength({
+      min: 8,
+      max: 10,
+    }),
+    check(
+      "new_password",
+      "Password length should be 8 to 10 characters!"
+    ).isLength({
+      min: 8,
+      max: 10,
+    }),
   ],
   UserController.changePassword
 );
@@ -327,6 +352,19 @@ router.post(
       .escape(),
   ],
   SubCategoryController.viewData
+);
+
+router.post(
+  "/get-sub-category",
+  auth.isAuthorized,
+  [
+    check("category_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  SubCategoryController.getSubCatData
 );
 
 router.post(
@@ -486,6 +524,19 @@ router.post(
 );
 
 router.post(
+  "/get-exercises",
+  auth.isAuthorized,
+  [
+    check("subcategory_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  ExerciseController.getExerciseData
+);
+
+router.post(
   "/add-exercise",
   auth.isAuthorized,
   [
@@ -499,7 +550,12 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
-    check("category_ids", "This is a required field!")
+    check("category_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("sub_category_ids", "This is a required field!")
       .not()
       .isEmpty()
       .trim()
@@ -509,6 +565,25 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
+    check("default_time", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("video_url", "This is a required field!").not().isEmpty(),
+    check("weight", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("weight_unit", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("reps", "This is a required field!").not().isEmpty().trim().escape(),
+    check("sets", "This is a required field!").not().isEmpty().trim().escape(),
+    check("break", "This is a required field!").not().isEmpty().trim().escape(),
     // check("image", "This is a required field!").not().isEmpty().trim().escape(),
   ],
   ExerciseController.addData
@@ -533,7 +608,12 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
-    check("category_ids", "This is a required field!")
+    check("category_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("sub_category_ids", "This is a required field!")
       .not()
       .isEmpty()
       .trim()
@@ -543,13 +623,60 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
+    check("default_time", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("video_url", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("weight", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("weight_unit", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("reps", "This is a required field!").not().isEmpty().trim().escape(),
+    check("sets", "This is a required field!").not().isEmpty().trim().escape(),
+    check("break", "This is a required field!").not().isEmpty().trim().escape(),
     // check("image", "This is a required field!").not().isEmpty().trim().escape(),
   ],
   ExerciseController.editData
 );
 
 router.post(
-  "/delete-equipment",
+  "/add-exercise-personal-best",
+  auth.isAuthorized,
+  [
+    check("user_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("exercise_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("weight", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape()
+      .isLength({ min: 2, max: 3 }),
+  ],
+  ExerciseController.addExPersonalBest
+);
+
+router.post(
+  "/delete-exercise",
   auth.isAuthorized,
   [
     check("exercise_id", "This is a required field!")
@@ -563,7 +690,35 @@ router.post(
 
 //Programme
 
-router.get("/programmes", auth.isAuthorized, ProgramController.getData);
+// router.get("/programmes", auth.isAuthorized, ProgramController.getData);
+
+router.post(
+  "/programmes",
+  auth.isAuthorized,
+  [
+    check("exc_type", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape()
+      .isIn(["admin", "user"])
+      .withMessage("Type mismatch!"),
+  ],
+  ProgramController.getData
+);
+
+router.post(
+  "/user-programmes",
+  auth.isAuthorized,
+  [
+    check("user_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  ProgramController.getUserData
+);
 
 router.post(
   "/view-programme",
@@ -582,7 +737,17 @@ router.post(
   "/add-programme",
   auth.isAuthorized,
   [
-    check("programme_id", "This is a required field!")
+    check("user_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("exercise_ids", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("exercise_my_time", "This is a required field!")
       .not()
       .isEmpty()
       .trim()
@@ -592,11 +757,11 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
-    check("description", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
+    // check("description", "This is a required field!")
+    //   .not()
+    //   .isEmpty()
+    //   .trim()
+    //   .escape(),
     // check("image", "This is a required field!").not().isEmpty().trim().escape(),
   ],
   ProgramController.addData
@@ -606,6 +771,16 @@ router.post(
   "/edit-programme",
   auth.isAuthorized,
   [
+    check("exercise_ids", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("exercise_my_time", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
     check("programme_id", "This is a required field!")
       .not()
       .isEmpty()
@@ -616,11 +791,11 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
-    check("description", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
+    // check("description", "This is a required field!")
+    //   .not()
+    //   .isEmpty()
+    //   .trim()
+    //   .escape(),
     // check("image", "This is a required field!").not().isEmpty().trim().escape(),
   ],
   ProgramController.editData
@@ -681,5 +856,82 @@ router.post("/add-setting", (req, res) => {
     }
   });
 });
+
+router.post(
+  "/add-travis-contact",
+  auth.isAuthorized,
+  [
+    check("user_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("name", "This is a required field!").not().isEmpty().trim().escape(),
+    check("phone", "This is a required field!").not().isEmpty().trim().escape(),
+    check("email", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape()
+      .isEmail(),
+    check("message", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  TravisController.addData
+);
+
+router.get("/travis-contacts", auth.isAuthorized, TravisController.getData);
+
+router.post(
+  "/global-search",
+  auth.isAuthorized,
+  [
+    check("search", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("type", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape()
+      .isIn(["category", "subcategory", "equipment", "exercise", "program"])
+      .withMessage("Type mismatch!"),
+  ],
+  SearchController.searchData
+);
+
+
+router.post(
+  "/progress",
+  auth.isAuthorized,
+  [
+    check("user_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  ExerciseController.getProgressData
+);
+
+
+
+router.post(
+  "/delete-user",
+  auth.isAuthorized,
+  [
+    check("user_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  UserController.deleteData
+);
 
 module.exports = router;

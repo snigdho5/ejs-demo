@@ -17,6 +17,8 @@ const BodyFocusController = require("../controllers/web/bodyFocusController");
 const SubFilterController = require("../controllers/web/subFilterController");
 const ExerciseController = require("../controllers/web/exerciseController");
 const EquipmentController = require("../controllers/web/equipmentController");
+const CmsController = require("../controllers/web/cmcController");
+const ContactController = require("../controllers/web/contactController");
 var session = require("express-session");
 
 // var { redisStore } = require("../middlewares/redis");
@@ -154,15 +156,15 @@ router.post(
   cors(),
   [
     check("focus_name", "This is a required field!")
-    .not()
-    .isEmpty()
-    .trim()
-    .escape(),
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
     check("description", "This is a required field!")
-    .not()
-    .isEmpty()
-    .trim()
-    .escape(),
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
   ],
   BodyFocusController.createData
 );
@@ -174,15 +176,15 @@ router.post(
   cors(),
   [
     check("focus_name", "This is a required field!")
-    .not()
-    .isEmpty()
-    .trim()
-    .escape(),
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
     check("description", "This is a required field!")
-    .not()
-    .isEmpty()
-    .trim()
-    .escape(),
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
   ],
   BodyFocusController.updateData
 );
@@ -199,28 +201,32 @@ router.post(
   BodyFocusController.deleteData
 );
 
-
 //sub filters
 router.get("/sub-filters", cors(), SubFilterController.getData);
 router.get("/add-sub-filter", cors(), SubFilterController.addData);
 
-// router.post(
-//   "/create-sub-filter",
-//   cors(),
-//   [
-//     check("focus_name", "This is a required field!")
-//     .not()
-//     .isEmpty()
-//     .trim()
-//     .escape(),
-//     check("description", "This is a required field!")
-//     .not()
-//     .isEmpty()
-//     .trim()
-//     .escape(),
-//   ],
-//   SubFilterController.createData
-// );
+router.post(
+  "/create-sub-filter",
+  cors(),
+  [
+    check("body_focus", "This is a required field!")
+    .not()
+    .isEmpty()
+    .trim()
+    .escape(),
+    check("sub_filter", "This is a required field!")
+    .not()
+    .isEmpty()
+    .trim()
+    .escape(),
+    check("description", "This is a required field!")
+    .not()
+    .isEmpty()
+    .trim()
+    .escape(),
+  ],
+  SubFilterController.createData
+);
 
 // router.get("/edit-sub-filter/:id", cors(), SubFilterController.editData);
 
@@ -254,13 +260,54 @@ router.get("/add-sub-filter", cors(), SubFilterController.addData);
 //   SubFilterController.deleteData
 // );
 
-//ExerciseController
-router.get("/exercises", cors(), ExerciseController.getData);
-router.get("/add-exercise", cors(), ExerciseController.addData);
-
 //EquipmentController
 router.get("/equipments", cors(), EquipmentController.getData);
 router.get("/add-equipment", cors(), EquipmentController.addData);
+router.post(
+  "/create-equipment",
+  cors(),
+  [
+    check("equipment_name", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("description", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  EquipmentController.createData
+);
 
+//Exercises
+router.get("/exercises", cors(), ExerciseController.getData);
+router.get("/add-exercise", cors(), ExerciseController.addData);
+router.post(
+  "/create-exercise",
+  cors(),
+  [
+    check("exercise_name", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("description", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  ExerciseController.createData
+);
+
+
+//Cms
+router.get("/cms", cors(), CmsController.getData);
+router.get("/add-cms", cors(), CmsController.addData);
+
+//Contact
+router.get("/contact-requests", cors(), ContactController.getData);
 
 module.exports = router;
