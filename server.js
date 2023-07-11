@@ -1,5 +1,8 @@
 const express = require("express");
 const app = express();
+var http = require('http');
+var https = require('https');
+var fs = require("fs");
 const port = 3000;
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -13,9 +16,8 @@ app.locals.siteName = "UK Fitness Hub";
 
 //database
 const mongoose = require("mongoose");
-const dbURI =
-  "mongodb+srv://snigdhoU1:MdzrUIxkbf0CGPhW@cluster0.vwhnn.mongodb.net/ukfitness";
-// const dbURI = "mongodb://61.16.131.204:27017/ukfitness";
+// const dbURI = "mongodb+srv://snigdhoU1:MdzrUIxkbf0CGPhW@cluster0.vwhnn.mongodb.net/ukfitness";
+const dbURI = "mongodb+srv://devlnsel:YG2YkrYq7BowcRfJ@cluster0.h142q.mongodb.net/ukfitness";
 
 app.use(express.json());
 
@@ -97,5 +99,38 @@ app.use("/routes", routes); //test
 //   next(err);
 // });
 
+
+// file location of private key
+var privateKey = fs.readFileSync( 'private.key' );
+
+// file location of SSL cert
+var certificate = fs.readFileSync( 'ssl.crt' );
+
+// set up a config object
+var server_config = {
+    key : privateKey,
+    cert: certificate,
+     location : {
+            proxy_pass : 'http://127.0.0.1:${port}/',
+    }
+};
+
+// create the HTTPS server on port 443
+var https_server = https.createServer(server_config, app).listen(port, function(err){
+    console.log(`App listening on port ${port}!`);
+});
+
+// create an HTTP server on port 80 and redirect to HTTPS 
+// var http_server = http.createServer(function(req,res){    
+//     // 301 redirect (reclassifies google listings)
+//     res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+//     res.end();
+// }).listen(80, function(err){
+//     console.log("Node.js Express HTTPS Server Listening on Port 80");    
+// });
+
+
+
+// app.listen(port, () => console.log(`App listening on port ${port}!`));
+ 
 //Snigdho Upadhyay
-app.listen(port, () => console.log(`App listening on port ${port}!`));
