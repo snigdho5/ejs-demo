@@ -101,10 +101,10 @@ app.use("/routes", routes); //test
 
 
 // file location of private key
-var privateKey = fs.readFileSync( 'private.key' );
+var privateKey = fs.readFileSync( 'ssl/private.key' );
 
 // file location of SSL cert
-var certificate = fs.readFileSync( 'ssl.crt' );
+var certificate = fs.readFileSync( 'ssl/ssl.crt' );
 
 // set up a config object
 var server_config = {
