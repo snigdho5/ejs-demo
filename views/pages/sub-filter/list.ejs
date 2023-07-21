@@ -55,7 +55,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <% if(respdata.list){ %>
+                                        <% if(respdata.list.length){ %>
                                             <% respdata.list.forEach(function(value, index) { %> 
                                             <tr>
                                                 <td><%= (index+1) %></td>
@@ -64,10 +64,10 @@
                                                 <td><%= value.added_dtime %></td>
                                                 <!-- <td>Active</th> -->
                                                 <td>
-                                                    <a href="/edit-body-focus/<%= value._id %>" class="btn btn-info btn-circle btn-sm"  title="Edit">
+                                                    <a href="/edit-sub-filter/<%= value._id %>" class="btn btn-info btn-circle btn-sm"  title="Edit">
                                                         <i class="fas fa-pencil-alt"></i>
                                                     </a>
-                                                    <a href="/delete-body-focus" class="btn btn-danger btn-circle btn-sm"  title="Delete">
+                                                    <a onclick="return confirm('Are you sure you want to delete this item?');" href="/delete-sub-filter/<%= value._id %>" class="btn btn-danger btn-circle btn-sm"  title="Delete">
                                                         <i class="fas fa-trash"></i>
                                                     </a>
                                                 </td>

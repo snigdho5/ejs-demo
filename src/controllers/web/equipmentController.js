@@ -149,3 +149,34 @@ exports.createData = async function (req, res, next) {
     }
   });
 };
+
+exports.deleteData = async function (req, res, next) {
+  // const errors = validationResult(req);
+  // if (!errors.isEmpty()) {
+  //   return res.status(400).json({
+  //     status: "0",
+  //     message: "Validation error!",
+  //     respdata: errors.array(),
+  //   });
+  // }
+
+  const del_id = mongoose.Types.ObjectId(req.params.id);
+  // console.log(del_id);
+
+  Equipment.findOne({ _id: del_id }).then((equipment) => {
+    if (!equipment) {
+      res.status(404).json({
+        status: "0",
+        message: "Not found!",
+        respdata: {},
+      });
+    } else {
+      //delete
+
+      Equipment.deleteOne({ _id: del_id }, function (err, obj) {
+        if (err) throw err;
+        res.redirect("/equipments");
+      });
+    }
+  });
+};

@@ -317,16 +317,19 @@ exports.updateData = async function (req, res, next) {
 };
 
 exports.deleteData = async function (req, res, next) {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({
-      status: "0",
-      message: "Validation error!",
-      respdata: errors.array(),
-    });
-  }
+  // const errors = validationResult(req);
+  // if (!errors.isEmpty()) {
+  //   return res.status(400).json({
+  //     status: "0",
+  //     message: "Validation error!",
+  //     respdata: errors.array(),
+  //   });
+  // }
 
-  Category.findOne({ _id: req.body.category_id }).then((category) => {
+  const del_id = mongoose.Types.ObjectId(req.params.id);
+  // console.log(del_id);
+
+  Category.findOne({ _id: del_id }).then((category) => {
     if (!category) {
       res.status(404).json({
         status: "0",
@@ -335,28 +338,10 @@ exports.deleteData = async function (req, res, next) {
       });
     } else {
       //delete
-      // try {
 
-      // console.log(ObjectId(req.body.category_id));
-
-      Category.deleteOne(
-        { _id: req.body.category_id },
-        { w: "majority", wtimeout: 100 }
-      );
-
-      // Category.remove({ _id: req.body.category_id });
-
-      // } catch (e) {
-      //   return res.status(404).json({
-      //     status: "0",
-      //     message: "Error!",
-      //     respdata: e,
-      //   });
-      // }
-      res.status(200).json({
-        status: "1",
-        message: "Deleted!",
-        respdata: category,
+      Category.deleteOne({ _id: del_id }, function (err, obj) {
+        if (err) throw err;
+        res.redirect("/body-focus");
       });
     }
   });

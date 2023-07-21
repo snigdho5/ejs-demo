@@ -8,7 +8,7 @@ const path = require("path");
 const fs = require("fs");
 const mime = require("mime");
 const Category = require("../../models/api/categoryModel");
-const Equipment = require("../../models/api/equipmentModel");
+const Exercise = require("../../models/api/exerciseModel");
 // const helper = require("../helpers/helper");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -22,7 +22,7 @@ const { check, validationResult } = require("express-validator");
 var crypto = require("crypto");
 var randId = crypto.randomBytes(20).toString("hex");
 const multer = require("multer");
-const request = require('request')
+const request = require('request');
 
 //methods
 
@@ -31,7 +31,7 @@ exports.getData = async function (req, res, next) {
 
   var pageTitle = req.app.locals.siteName + " - Exercise List";
 
-  Category.find().then((category) => {
+  Exercise.find().then((exercise) => {
     res.render("pages/exercise/list", {
       siteName: req.app.locals.siteName,
       pageTitle: pageTitle,
@@ -43,7 +43,7 @@ exports.getData = async function (req, res, next) {
       status: 0,
       message: "found!",
       respdata: {
-        list: category,
+        list: exercise,
       },
     });
   });
@@ -53,7 +53,7 @@ exports.addData = async function (req, res, next) {
   var pageTitle = req.app.locals.siteName + " - Add Exercise";
 
   Category.find().then((category) => {
-    Equipment.find().then((equipment) => {
+    Exercise.find().then((equipment) => {
       res.render("pages/exercise/create", {
         siteName: req.app.locals.siteName,
         pageTitle: pageTitle,
@@ -76,6 +76,14 @@ exports.addData = async function (req, res, next) {
 
 
 
+exports.getSubCatData = async function (req, res, next) {
+
+  Category.find().then((category) => {
+    
+  });
+
+};
+
 exports.createData = async function (req, res, next) {
   var pageName = "Sub Filter";
   var pageTitle = req.app.locals.siteName + " - Add " + pageName;
@@ -97,8 +105,8 @@ exports.createData = async function (req, res, next) {
     });
   }
 
-  SubCategory.findOne({ name: req.body.sub_filter }).then((subCategory) => {
-    if (subCategory) {
+  Exercise.findOne({ name: req.body.sub_filter }).then((exercise) => {
+    if (exercise) {
       res.render("pages/sub-filter/create", {
         status: 0,
         siteName: req.app.locals.siteName,
@@ -116,7 +124,7 @@ exports.createData = async function (req, res, next) {
       var image_url = req.app.locals.requrl + "/public/images/no-image.jpg";
       // console.log(image_url);
 
-      const newCat = SubCategory({
+      const newCat = Exercise({
         category_id: req.body.body_focus,
         name: req.body.sub_filter,
         description: req.body.description,
@@ -126,7 +134,7 @@ exports.createData = async function (req, res, next) {
 
       newCat
         .save()
-        .then((subCategory) => {
+        .then((exercise) => {
           res.render("pages/sub-filter/create", {
             status: 0,
             siteName: req.app.locals.siteName,
@@ -138,7 +146,7 @@ exports.createData = async function (req, res, next) {
             year: moment().format("YYYY"),
             message: "Added!",
             requrl: req.app.locals.requrl,
-            respdata: subCategory,
+            respdata: exercise,
           });
         })
         .catch((error) => {
@@ -156,6 +164,38 @@ exports.createData = async function (req, res, next) {
             respdata: error,
           });
         });
+    }
+  });
+};
+
+
+exports.deleteData = async function (req, res, next) {
+  // const errors = validationResult(req);
+  // if (!errors.isEmpty()) {
+  //   return res.status(400).json({
+  //     status: "0",
+  //     message: "Validation error!",
+  //     respdata: errors.array(),
+  //   });
+  // }
+
+  const del_id = mongoose.Types.ObjectId(req.params.id);
+  // console.log(del_id);
+
+  Exercise.findOne({ _id: del_id }).then((exercise) => {
+    if (!exercise) {
+      res.status(404).json({
+        status: "0",
+        message: "Not found!",
+        respdata: {},
+      });
+    } else {
+      //delete
+
+      Exercise.deleteOne({ _id: del_id }, function (err, obj) {
+        if (err) throw err;
+        res.redirect("/sub-filters");
+      });
     }
   });
 };

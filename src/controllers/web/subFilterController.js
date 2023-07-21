@@ -74,7 +74,6 @@ exports.addData = async function (req, res, next) {
   });
 };
 
-
 exports.createData = async function (req, res, next) {
   var pageName = "Sub Filter";
   var pageTitle = req.app.locals.siteName + " - Add " + pageName;
@@ -155,6 +154,37 @@ exports.createData = async function (req, res, next) {
             respdata: error,
           });
         });
+    }
+  });
+};
+
+exports.deleteData = async function (req, res, next) {
+  // const errors = validationResult(req);
+  // if (!errors.isEmpty()) {
+  //   return res.status(400).json({
+  //     status: "0",
+  //     message: "Validation error!",
+  //     respdata: errors.array(),
+  //   });
+  // }
+
+  const del_id = mongoose.Types.ObjectId(req.params.id);
+  // console.log(del_id);
+
+  SubCategory.findOne({ _id: del_id }).then((subCategory) => {
+    if (!subCategory) {
+      res.status(404).json({
+        status: "0",
+        message: "Not found!",
+        respdata: {},
+      });
+    } else {
+      //delete
+
+      SubCategory.deleteOne({ _id: del_id }, function (err, obj) {
+        if (err) throw err;
+        res.redirect("/sub-filters");
+      });
     }
   });
 };

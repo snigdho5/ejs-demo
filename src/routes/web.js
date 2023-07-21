@@ -189,14 +189,14 @@ router.post(
   BodyFocusController.updateData
 );
 
-router.post(
-  "/delete-body-focus",
+router.get(
+  "/delete-body-focus/:id",
   [
-    check("category_id", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
+    // check("category_id", "This is a required field!")
+    //   .not()
+    //   .isEmpty()
+    //   .trim()
+    //   .escape(),
   ],
   BodyFocusController.deleteData
 );
@@ -210,20 +210,20 @@ router.post(
   cors(),
   [
     check("body_focus", "This is a required field!")
-    .not()
-    .isEmpty()
-    .trim()
-    .escape(),
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
     check("sub_filter", "This is a required field!")
-    .not()
-    .isEmpty()
-    .trim()
-    .escape(),
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
     check("description", "This is a required field!")
-    .not()
-    .isEmpty()
-    .trim()
-    .escape(),
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
   ],
   SubFilterController.createData
 );
@@ -248,17 +248,17 @@ router.post(
 //   SubFilterController.updateData
 // );
 
-// router.post(
-//   "/delete-sub-filter",
-//   [
-//     check("category_id", "This is a required field!")
-//       .not()
-//       .isEmpty()
-//       .trim()
-//       .escape(),
-//   ],
-//   SubFilterController.deleteData
-// );
+router.get(
+  "/delete-sub-filter/:id",
+  [
+    // check("equipment_id", "This is a required field!")
+    //   .not()
+    //   .isEmpty()
+    //   .trim()
+    //   .escape(),
+  ],
+  SubFilterController.deleteData
+);
 
 //EquipmentController
 router.get("/equipments", cors(), EquipmentController.getData);
@@ -279,6 +279,18 @@ router.post(
       .escape(),
   ],
   EquipmentController.createData
+);
+
+router.get(
+  "/delete-equipment/:id",
+  [
+    // check("equipment_id", "This is a required field!")
+    //   .not()
+    //   .isEmpty()
+    //   .trim()
+    //   .escape(),
+  ],
+  EquipmentController.deleteData
 );
 
 //Exercises
@@ -302,6 +314,17 @@ router.post(
   ExerciseController.createData
 );
 
+router.get(
+  "/delete-exercise/:id",
+  [
+    // check("equipment_id", "This is a required field!")
+    //   .not()
+    //   .isEmpty()
+    //   .trim()
+    //   .escape(),
+  ],
+  ExerciseController.deleteData
+);
 
 //Cms
 router.get("/cms", cors(), CmsController.getData);
