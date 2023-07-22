@@ -39,7 +39,21 @@ db.once("open", () => {
 app.set("view engine", "ejs");
 
 // adding Helmet to enhance your API's security
-app.use(helmet());
+// app.use(helmet());
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'", "https: data:"],
+      fontSrc: ["'self'", "https: data:"],
+      imgSrc: ["'self'", "https: data:"],
+      scriptSrc: ["'self'", "https: data:"],
+      styleSrc: ["'self'", "https: data:"],
+      frameSrc: ["'self'", "https: data:"],
+      // upgradeInsecureRequests: null
+    },
+    reportOnly: true, // Set to 'true' to enable report-only mode
+  })
+);
 // using bodyParser to parse JSON bodies into JS objects
 // app.use(bodyParser.json());
 app.use(bodyParser.json({ limit: "50mb" }));

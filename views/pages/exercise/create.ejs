@@ -40,7 +40,7 @@
                             <form class="user" action="/create-exercise" method="post">
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <select class="form-control" name="body_focus" id="body_focus">
+                                        <select class="form-control body_focus" name="body_focus" id="body_focus">
                                             <option value="0" selected>Select Body Focus</option>
                                             <% if(respdata.category){ %>
                                                 <% respdata.category.forEach(function(value, index) { %> 
@@ -105,6 +105,34 @@
     <%- include('../../partials/logoutModal'); %>
 
     <%- include('../../partials/footerJs'); %>
+
+    <script>
+        $(document).ready(function () {
+        $(".body_focus").on("change", function () {
+          var body_focus = this.value;
+          $("#sub_filter").html("");
+          $.ajax({
+            url: "/get-sub-filter-by-body-focus",
+            type: "POST",
+            data: {
+              body_focus: body_focus,
+            },
+            dataType: "json",
+            success: function (result) {
+              $("#sub_filter").html(
+                '<option value="">Select Sub Filter</option>'
+              );
+              $.each(result.respdata.subcat, function (key, value) {
+                $("#sub_filter").append(
+                  '<option value="' + value._id + '">' + value.name + "</option>"
+                );
+              });
+            },
+          });
+        });
+        
+      });
+    </script>
 
 </body>
 

@@ -158,6 +158,22 @@ exports.createData = async function (req, res, next) {
   });
 };
 
+exports.getSubFilterByBodyFocus = async function (req, res, next) {
+  // Validate request parameters, queries using express-validator
+
+  SubCategory.findOne({ category_id: req.body.body_focus }).then(
+    (subCategory) => {
+      res.status(200).json({
+        status: "0",
+        message: "found!",
+        respdata: {
+          subcat: subCategory,
+        },
+      });
+    }
+  );
+};
+
 exports.deleteData = async function (req, res, next) {
   // const errors = validationResult(req);
   // if (!errors.isEmpty()) {

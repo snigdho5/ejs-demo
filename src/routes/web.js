@@ -228,6 +228,18 @@ router.post(
   SubFilterController.createData
 );
 
+router.post(
+  "/get-sub-filter-by-body-focus",
+  cors(),
+  [
+    check("body_focus", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  SubFilterController.getSubFilterByBodyFocus
+);
 // router.get("/edit-sub-filter/:id", cors(), SubFilterController.editData);
 
 // router.post(
