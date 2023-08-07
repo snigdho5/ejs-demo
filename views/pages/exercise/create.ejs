@@ -2,138 +2,187 @@
 <html lang="en">
 
 <head>
-    <%- include('../../partials/head', {pageTitle: pageTitle}); %>
+  <%- include('../../partials/head', {pageTitle: pageTitle}); %>
 </head>
 
 <body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    <!-- Sidebar -->
+    <%- include('../../partials/sidebar', {siteName: siteName}); %>
+    <!-- End of Sidebar -->
 
-    <!-- Page Wrapper -->
-    <div id="wrapper">
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        <!-- Topbar -->
+        <%- include('../../partials/header', {siteName: siteName,
+          userFullName: userFullName, userImage: userImage}); %>
+        <!-- End of Topbar -->
 
-        <!-- Sidebar -->
-        <%- include('../../partials/sidebar', {siteName: siteName}); %>
-        <!-- End of Sidebar -->
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Page Heading -->
+          <h1 class="h3 mb-2 text-gray-800">Exercise</h1>
+          <p class="mb-4">Create Exercise</p>
 
-        <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
-
-            <!-- Main Content -->
-            <div id="content">
-
-                <!-- Topbar -->
-                <%- include('../../partials/header', {siteName: siteName, userFullName: userFullName, userImage: userImage}); %>
-                <!-- End of Topbar -->
-
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
-
-                      <!-- Page Heading -->
-                      <h1 class="h3 mb-2 text-gray-800">Exercise</h1>
-                      <p class="mb-4">Create Exercise</p>
-  
-                      <!-- DataTales Example -->
-                      <div class="card shadow mb-4">
-                          <div class="card-header py-3">
-                              <h6 class="m-0 font-weight-bold text-primary">Exercise Details</h6>
-                          </div>
-                          <div class="card-body">
-                            <form class="user" action="/create-exercise" method="post">
-                                <div class="form-group row">
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <select class="form-control body_focus" name="body_focus" id="body_focus">
-                                            <option value="0" selected>Select Body Focus</option>
-                                            <% if(respdata.category){ %>
-                                                <% respdata.category.forEach(function(value, index) { %> 
-                                                    <option value="<%= value._id %>"><%= value.name %></option>
-                                                <% });  %>
-                                            <% } %> 
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <select class="form-control" name="sub_filter[]" id="sub_filter" multiple="multiple">
-                                            <option value="0" selected>Select Sub Filter</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <select class="form-control" name="equipments[]" id="equipments" multiple="multiple">
-                                            <option value="0" selected>Select Equipments</option>
-                                            <% if(respdata.equipment){ %>
-                                                <% respdata.equipment.forEach(function(value, index) { %> 
-                                                    <option value="<%= value._id %>"><%= value.name %></option>
-                                                <% });  %>
-                                            <% } %> 
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <div class="col-sm-12 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="exercise" name="exercise"
-                                            placeholder="Exercise..." value="">
-                                    </div>
-                                </div>
-                                <input type="submit" class="btn btn-primary btn-user btn-block" id="btn_exercise" name="btn_exercise" value="Submit">
-                            </form>
-                            <hr>
-                          </div>
-                      </div>
-                </div>
-                <!-- /.container-fluid -->
-
+          <!-- DataTales Example -->
+          <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">
+                Exercise Details
+              </h6>
             </div>
-            <!-- End of Main Content -->
+            <div class="card-body">
+              <form class="user" action="/create-exercise" method="post">
+                <div class="form-group row">
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    <select class="form-control body_focus" name="body_focus" id="body_focus" required>
+                      <option value="">Select</option>
+                      <% if(respdata.category){ %> <%
+                        respdata.category.forEach(function(value, index) { %>
+                      <option value="<%= value._id %>">
+                        <%= value.name %>
+                      </option>
+                      <% }); %> <% } %>
+                    </select>
+                  </div>
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    <select class="form-control sub_filter" name="sub_filter[]" id="sub_filter" multiple="multiple" required>
+                      <option value="">Select</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    <select class="form-control equipments" name="equipments[]" id="equipments" multiple="multiple" required>
+                      <option value="">Select</option>
+                      <% if(respdata.equipment){ %> <%
+                        respdata.equipment.forEach(function(value, index) { %>
+                      <option value="<%= value._id %>">
+                        <%= value.name %>
+                      </option>
+                      <% }); %> <% } %>
+                    </select>
+                  </div>
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    <input type="url" class="form-control form-control-user" id="video_url" name="video_url" placeholder="Enter Youtube Video URL..." value="" required />
+                  </div>
+                </div>
 
-            <!-- Footer -->
-            <%- include('../../partials/footer', {year: year, siteName: siteName}); %>
-            <!-- End of Footer -->
+                <div class="form-group row">
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    <input type="text" class="form-control form-control-user" id="exercise_name" name="exercise_name" placeholder="Exercise name..." value="" required />
+                  </div>
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    <textarea type="text" class="form-control form-control-user" id="description" name="description" placeholder="Description" required></textarea>
+                  </div>
+                </div>
 
+
+                <div class="form-group row">
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    <input type="text" class="form-control form-control-user" id="default_time" name="default_time" placeholder="default time..." value="" required />
+                  </div>
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    <input type="text" class="form-control form-control-user" id="weight" name="weight" placeholder="weight" required>
+                  </div>
+                </div>
+
+
+                <div class="form-group row">
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    <input type="text" class="form-control form-control-user" id="weight_unit" name="weight_unit" placeholder="weight unit..." value="" required />
+                  </div>
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    <input type="text" class="form-control form-control-user" id="reps" name="reps" placeholder="reps" required>
+                  </div>
+                </div>
+
+
+                <div class="form-group row">
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    <input type="text" class="form-control form-control-user" id="sets" name="sets" placeholder="sets..." value="" required />
+                  </div>
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    <input type="text" class="form-control form-control-user" id="break" name="break" placeholder="break" required>
+                  </div>
+                </div>
+                <input type="submit" class="btn btn-primary btn-user btn-block" id="btn_exercise" name="btn_exercise" value="Submit" />
+              </form>
+
+              <hr />
+            </div>
+          </div>
         </div>
-        <!-- End of Content Wrapper -->
+        <!-- /.container-fluid -->
+      </div>
+      <!-- End of Main Content -->
 
+      <!-- Footer -->
+      <%- include('../../partials/footer', {year: year, siteName: siteName});
+        %>
+      <!-- End of Footer -->
     </div>
-    <!-- End of Page Wrapper -->
+    <!-- End of Content Wrapper -->
+  </div>
+  <!-- End of Page Wrapper -->
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
 
-    <!-- Logout Modal-->
-    
-    <%- include('../../partials/logoutModal'); %>
+  <!-- Logout Modal-->
 
-    <%- include('../../partials/footerJs'); %>
+  <%- include('../../partials/logoutModal'); %> <%-
+    include('../../partials/footerJs'); %>
 
-    <script>
-        $(document).ready(function () {
-        $(".body_focus").on("change", function () {
-          var body_focus = this.value;
-          $("#sub_filter").html("");
-          $.ajax({
-            url: "/get-sub-filter-by-body-focus",
-            type: "POST",
-            data: {
-              body_focus: body_focus,
-            },
-            dataType: "json",
-            success: function (result) {
-              $("#sub_filter").html(
-                '<option value="">Select Sub Filter</option>'
-              );
-              $.each(result.respdata.subcat, function (key, value) {
-                $("#sub_filter").append(
-                  '<option value="' + value._id + '">' + value.name + "</option>"
-                );
-              });
-            },
-          });
-        });
-        
+  <script>
+    $(document).ready(function() {
+      $(".body_focus").select2({
+        placeholder: "Select Body Focus",
+        allowClear: true,
       });
-    </script>
+      $(".sub_filter").select2({
+        placeholder: "Select Sub Filters",
+        allowClear: true,
+      });
+      $(".equipments").select2({
+        placeholder: "Select equipments",
+        allowClear: true,
+      });
 
+      $(".body_focus").on("change", function() {
+        var body_focus = this.value;
+        $(".sub_filter").html("");
+        $.ajax({
+          url: "/get-sub-filter-by-body-focus",
+          type: "POST",
+          data: {
+            body_focus: body_focus,
+          },
+          dataType: "json",
+          success: function(result) {
+            $(".sub_filter").html(
+              '<option value="">Select Sub Filter</option>'
+            );
+            //   console.log(result.respdata.subcat);
+            $.each(result.respdata.subcat, function(key, value) {
+              $(".sub_filter").append(
+                '<option value="' +
+                value._id +
+                '">' +
+                value.name +
+                "</option>"
+              );
+            });
+          },
+        });
+      });
+    });
+  </script>
 </body>
 
 </html>
