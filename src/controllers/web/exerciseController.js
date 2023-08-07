@@ -91,7 +91,7 @@ exports.createData = async function (req, res, next) {
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    // console.log(errors.array());
+    console.log(errors.array());
     res.render("pages/sub-filter/create", {
       status: 0,
       siteName: req.app.locals.siteName,
@@ -124,7 +124,62 @@ exports.createData = async function (req, res, next) {
           respdata: {},
         });
       } else {
-        var image_url = req.app.locals.requrl + "/public/images/no-image.jpg";
+        //image uplaod
+
+        const folderPath = "./public/images/exercises/";
+        const path = Date.now() + ".png";
+        var image_url = '';
+
+        const handleError = (err, res) => {
+          res
+            .status(500)
+            .contentType("text/plain")
+            .end("Oops! Something went wrong!");
+        };
+
+        const upload = multer({
+          dest: folderPath
+          // you might also want to set some limits: https://github.com/expressjs/multer#limits
+        });
+
+
+        upload.single("imagefile" /* name attribute of <file> element in your form */),
+          (req, res) => {
+            const tempPath = req.imagefile.path;
+            const targetPath = path.join(__dirname, folderPath + path);
+
+            if (path.extname(req.file.originalname).toLowerCase() === ".png") {
+              fs.rename(tempPath, targetPath, err => {
+                if (err) return handleError(err, res);
+
+                // res
+                //   .status(200)
+                //   .contentType("text/plain")
+                //   .end("File uploaded!");
+              });
+            } else {
+              fs.unlink(tempPath, err => {
+                if (err) return handleError(err, res);
+
+                res
+                  .status(403)
+                  .contentType("text/plain")
+                  .end("Only .png files are allowed!");
+              });
+            }
+
+            if (targetPath) {
+              image_url = req.app.locals.requrl + targetPath;
+            } else {
+              image_url = req.app.locals.requrl + "/public/images/no-image.jpg";
+            }
+
+          }
+
+        if (image_url == '') {
+          var image_url = req.app.locals.requrl + "/public/images/no-image.jpg";
+        }
+
         // console.log(image_url);
 
         const newEx = Exercise({

@@ -35,7 +35,7 @@
               </h6>
             </div>
             <div class="card-body">
-              <form class="user" action="/create-exercise" method="post">
+              <form class="user" action="/create-exercise" method="post" >
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
                     <select class="form-control body_focus" name="body_focus" id="body_focus" required>
@@ -67,48 +67,52 @@
                     </select>
                   </div>
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="url" class="form-control form-control-user" id="video_url" name="video_url" placeholder="Enter Youtube Video URL..." value="" required />
+                    <input type="url" class="form-control" id="video_url" name="video_url" placeholder="Enter Youtube Video URL..." value="" required />
                   </div>
                 </div>
 
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="text" class="form-control form-control-user" id="exercise_name" name="exercise_name" placeholder="Exercise name..." value="" required />
+                    <input type="text" class="form-control" id="exercise_name" name="exercise_name" placeholder="Exercise name..." value="" required />
                   </div>
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                    <textarea type="text" class="form-control form-control-user" id="description" name="description" placeholder="Description" required></textarea>
+                    <textarea type="text" class="form-control" id="description" name="description" placeholder="Description" required></textarea>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-4 mb-3 mb-sm-0">
+                    <input type="text" class="form-control" id="default_time" name="default_time" placeholder="default time..." value="" required />
+                  </div>
+                  <div class="col-sm-4 mb-3 mb-sm-0">
+                    <input type="text" class="form-control" id="weight" name="weight" placeholder="weight" required>
+                  </div>
+                  <div class="col-sm-4 mb-3 mb-sm-0">
+                    <input type="text" class="form-control" id="weight_unit" name="weight_unit" placeholder="weight unit..." value="" required />
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-4 mb-3 mb-sm-0">
+                    <input type="text" class="form-control" id="reps" name="reps" placeholder="reps" required>
+                  </div>
+                  <div class="col-sm-4 mb-3 mb-sm-0">
+                    <input type="text" class="form-control" id="sets" name="sets" placeholder="sets..." value="" required />
+                  </div>
+                  <div class="col-sm-4 mb-3 mb-sm-0">
+                    <input type="text" class="form-control" id="break" name="break" placeholder="break" required>
                   </div>
                 </div>
 
 
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="text" class="form-control form-control-user" id="default_time" name="default_time" placeholder="default time..." value="" required />
+                    <input type="file" class="form-control" accept="image/*" id="imagefile" name="imagefile" required>
                   </div>
-                  <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="text" class="form-control form-control-user" id="weight" name="weight" placeholder="weight" required>
-                  </div>
+
+                  <div class="col-sm-6 mb-3 mb-sm-0"></div>
                 </div>
 
-
-                <div class="form-group row">
-                  <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="text" class="form-control form-control-user" id="weight_unit" name="weight_unit" placeholder="weight unit..." value="" required />
-                  </div>
-                  <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="text" class="form-control form-control-user" id="reps" name="reps" placeholder="reps" required>
-                  </div>
-                </div>
-
-
-                <div class="form-group row">
-                  <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="text" class="form-control form-control-user" id="sets" name="sets" placeholder="sets..." value="" required />
-                  </div>
-                  <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="text" class="form-control form-control-user" id="break" name="break" placeholder="break" required>
-                  </div>
-                </div>
                 <input type="submit" class="btn btn-primary btn-user btn-block" id="btn_exercise" name="btn_exercise" value="Submit" />
               </form>
 

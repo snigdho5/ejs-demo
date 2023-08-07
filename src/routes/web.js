@@ -372,6 +372,11 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
+      check("imagefile", "This is a required field!")
+        .not()
+        .isEmpty()
+        .trim()
+        .escape(),
   ],
   ExerciseController.createData
 );
