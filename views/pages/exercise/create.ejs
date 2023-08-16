@@ -35,7 +35,7 @@
               </h6>
             </div>
             <div class="card-body">
-              <form class="user" action="/create-exercise" method="post" >
+              <form class="user" action="/create-exercise" method="post" enctype="multipart/form-data">
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
                     <select class="form-control body_focus" name="body_focus" id="body_focus" required>
@@ -107,7 +107,7 @@
 
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="file" class="form-control" accept="image/*" id="imagefile" name="imagefile" required>
+                    <input type="file" class="form-control" accept="image/*" id="file" name="file" required>
                   </div>
 
                   <div class="col-sm-6 mb-3 mb-sm-0"></div>

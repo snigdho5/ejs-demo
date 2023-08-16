@@ -20,6 +20,8 @@ const EquipmentController = require("../controllers/web/equipmentController");
 const CmsController = require("../controllers/web/cmcController");
 const ContactController = require("../controllers/web/contactController");
 var session = require("express-session");
+const multer = require("multer");
+const upload = multer();
 
 // var { redisStore } = require("../middlewares/redis");
 
@@ -310,7 +312,7 @@ router.get("/exercises", cors(), ExerciseController.getData);
 router.get("/add-exercise", cors(), ExerciseController.addData);
 router.post(
   "/create-exercise",
-  cors(),
+  upload.any(),
   [
     check("body_focus", "This is a required field!")
       .not()
@@ -340,8 +342,7 @@ router.post(
     check("video_url", "This is a required field!")
       .not()
       .isEmpty()
-      .trim()
-      .escape(),
+      .trim(),
     check("default_time", "This is a required field!")
       .not()
       .isEmpty()
@@ -372,11 +373,11 @@ router.post(
       .isEmpty()
       .trim()
       .escape(),
-      check("imagefile", "This is a required field!")
-        .not()
-        .isEmpty()
-        .trim()
-        .escape(),
+      // check("file", "This is a required field!")
+      //   .not()
+      //   .isEmpty()
+      //   .trim()
+      //   .escape(),
   ],
   ExerciseController.createData
 );

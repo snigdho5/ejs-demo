@@ -129,6 +129,11 @@ exports.createData = async function (req, res, next) {
         const folderPath = "./public/images/exercises/";
         const path = Date.now() + ".png";
         var image_url = '';
+        image_url = req.app.locals.requrl + "/public/images/no-image.jpg";
+
+        console.log('output 1 !!!!');
+        // console.log(req.body);
+        // console.log(req.files);
 
         const handleError = (err, res) => {
           res
@@ -143,19 +148,20 @@ exports.createData = async function (req, res, next) {
         });
 
 
-        upload.single("imagefile" /* name attribute of <file> element in your form */),
+        upload.single("file" /* name attribute of <file> element in your form */),
           (req, res) => {
-            const tempPath = req.imagefile.path;
-            const targetPath = path.join(__dirname, folderPath + path);
+            console.log('output 2 !!!!');
+            const tempPath = req.file.path;
+            const targetPath = path.join(__dirname, "./uploads/image.png");
 
             if (path.extname(req.file.originalname).toLowerCase() === ".png") {
               fs.rename(tempPath, targetPath, err => {
                 if (err) return handleError(err, res);
 
-                // res
-                //   .status(200)
-                //   .contentType("text/plain")
-                //   .end("File uploaded!");
+                res
+                  .status(200)
+                  .contentType("text/plain")
+                  .end("File uploaded!");
               });
             } else {
               fs.unlink(tempPath, err => {
@@ -167,18 +173,10 @@ exports.createData = async function (req, res, next) {
                   .end("Only .png files are allowed!");
               });
             }
-
-            if (targetPath) {
-              image_url = req.app.locals.requrl + targetPath;
-            } else {
-              image_url = req.app.locals.requrl + "/public/images/no-image.jpg";
-            }
-
           }
 
-        if (image_url == '') {
-          var image_url = req.app.locals.requrl + "/public/images/no-image.jpg";
-        }
+
+        console.log('output 4 !!!!');
 
         // console.log(image_url);
 
