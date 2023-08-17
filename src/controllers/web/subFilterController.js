@@ -30,6 +30,26 @@ exports.getData = async function (req, res, next) {
   var pageName = "Sub Filter";
   var pageTitle = req.app.locals.siteName + " - " + pageName + " List";
 
+  SubCategory.aggregate([
+    {
+      $lookup: {
+        from: "mt_categories",
+        localField: "category_id",
+        foreignField: "_id",
+        as: "category_name"
+      }
+    },
+    // {
+    //   $unwind: "$category_name"
+    // }
+  ])
+    .then((result) => {
+      console.log(result);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
   SubCategory.find().then((subcat) => {
     res.render("pages/sub-filter/list", {
       siteName: req.app.locals.siteName,

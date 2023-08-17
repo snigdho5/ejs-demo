@@ -108,6 +108,41 @@ exports.createData = async function (req, res, next) {
 
   } else {
 
+    // var validationErr = {};
+    // if (req.body.body_focus == '') {
+    //   validationErr += {
+    //     "msg": "This is a required field!",
+    //     "param": "body_focus",
+    //     "location": "body"
+    //   };
+    // }
+
+    // if (req.body.sub_filter == '') {
+    //   validationErr += {
+    //     "msg": "This is a required field!",
+    //     "param": "sub_filter",
+    //     "location": "body"
+    //   };
+    // }
+
+    // if(validationErr){
+    //   res.render("pages/sub-filter/create", {
+    //     status: 0,
+    //     siteName: req.app.locals.siteName,
+    //     userFullName: req.session.user.name,
+    //     userImage: req.session.user.image_url,
+    //     userEmail: req.session.user.email,
+    //     pageName: pageName,
+    //     pageTitle: pageTitle,
+    //     year: moment().format("YYYY"),
+    //     message: "Validation error!",
+    //     requrl: req.app.locals.requrl,
+    //     respdata: validationErr,
+    //   });
+    // }
+
+
+
     Exercise.findOne({ name: req.body.sub_filter }).then((exercise) => {
       if (exercise) {
         res.render("pages/sub-filter/create", {
@@ -126,59 +161,9 @@ exports.createData = async function (req, res, next) {
       } else {
         //image uplaod
 
-        const folderPath = "./public/images/exercises/";
-        const path = Date.now() + ".png";
-        var image_url = '';
-        image_url = req.app.locals.requrl + "/public/images/no-image.jpg";
+        // const requrl = req.protocol + '://' + req.get('host');
+        var image_url = req.app.locals.requrl + '/public/images/exercises/' + req.file.filename;
 
-        console.log('output 1 !!!!');
-        // console.log(req.body);
-        // console.log(req.files);
-
-        const handleError = (err, res) => {
-          res
-            .status(500)
-            .contentType("text/plain")
-            .end("Oops! Something went wrong!");
-        };
-
-        const upload = multer({
-          dest: folderPath
-          // you might also want to set some limits: https://github.com/expressjs/multer#limits
-        });
-
-
-        upload.single("file" /* name attribute of <file> element in your form */),
-          (req, res) => {
-            console.log('output 2 !!!!');
-            const tempPath = req.file.path;
-            const targetPath = path.join(__dirname, "./uploads/image.png");
-
-            if (path.extname(req.file.originalname).toLowerCase() === ".png") {
-              fs.rename(tempPath, targetPath, err => {
-                if (err) return handleError(err, res);
-
-                res
-                  .status(200)
-                  .contentType("text/plain")
-                  .end("File uploaded!");
-              });
-            } else {
-              fs.unlink(tempPath, err => {
-                if (err) return handleError(err, res);
-
-                res
-                  .status(403)
-                  .contentType("text/plain")
-                  .end("Only .png files are allowed!");
-              });
-            }
-          }
-
-
-        console.log('output 4 !!!!');
-
-        // console.log(image_url);
 
         const newEx = Exercise({
           category_id: req.body.body_focus,

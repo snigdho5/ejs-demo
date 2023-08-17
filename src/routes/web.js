@@ -8,6 +8,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const tokenSecret = "a2sd#Fs43d4G3524Kh";
 const url = require("url");
+const path = require("path");
 const { check, validationResult } = require("express-validator");
 const rounds = 10;
 //controllers, models, services, helpers
@@ -21,7 +22,17 @@ const CmsController = require("../controllers/web/cmcController");
 const ContactController = require("../controllers/web/contactController");
 var session = require("express-session");
 const multer = require("multer");
-const upload = multer();
+
+const storage = multer.diskStorage({
+  destination: "./public/images/exercises/",
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const fileExtension = path.extname(file.originalname);
+    cb(null, 'image-' + uniqueSuffix + fileExtension);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 // var { redisStore } = require("../middlewares/redis");
 
@@ -312,73 +323,73 @@ router.get("/exercises", cors(), ExerciseController.getData);
 router.get("/add-exercise", cors(), ExerciseController.addData);
 router.post(
   "/create-exercise",
-  upload.any(),
-  [
-    check("body_focus", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
-    check("sub_filter", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
-    check("equipments", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
-    check("description", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
-    check("exercise_name", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
-    check("video_url", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim(),
-    check("default_time", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
-    check("weight", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
-    check("weight_unit", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
-    check("reps", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
-    check("sets", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
-    check("break", "This is a required field!")
-      .not()
-      .isEmpty()
-      .trim()
-      .escape(),
-      // check("file", "This is a required field!")
-      //   .not()
-      //   .isEmpty()
-      //   .trim()
-      //   .escape(),
-  ],
+  // [
+  //   check("body_focus", "This is a required field!")
+  //     .not()
+  //     .isEmpty()
+  //     .trim()
+  //     .escape(),
+  //   check("sub_filter", "This is a required field!")
+  //     .not()
+  //     .isEmpty()
+  //     .trim()
+  //     .escape(),
+  //   check("equipments", "This is a required field!")
+  //     .not()
+  //     .isEmpty()
+  //     .trim()
+  //     .escape(),
+  //   check("description", "This is a required field!")
+  //     .not()
+  //     .isEmpty()
+  //     .trim()
+  //     .escape(),
+  //   check("exercise_name", "This is a required field!")
+  //     .not()
+  //     .isEmpty()
+  //     .trim()
+  //     .escape(),
+  //   check("video_url", "This is a required field!")
+  //     .not()
+  //     .isEmpty()
+  //     .trim(),
+  //   check("default_time", "This is a required field!")
+  //     .not()
+  //     .isEmpty()
+  //     .trim()
+  //     .escape(),
+  //   check("weight", "This is a required field!")
+  //     .not()
+  //     .isEmpty()
+  //     .trim()
+  //     .escape(),
+  //   check("weight_unit", "This is a required field!")
+  //     .not()
+  //     .isEmpty()
+  //     .trim()
+  //     .escape(),
+  //   check("reps", "This is a required field!")
+  //     .not()
+  //     .isEmpty()
+  //     .trim()
+  //     .escape(),
+  //   check("sets", "This is a required field!")
+  //     .not()
+  //     .isEmpty()
+  //     .trim()
+  //     .escape(),
+  //   check("break", "This is a required field!")
+  //     .not()
+  //     .isEmpty()
+  //     .trim()
+  //     .escape(),
+  //     // check("file", "This is a required field!")
+  //     //   .not()
+  //     //   .isEmpty()
+  //     //   .trim()
+  //     //   .escape(),
+  // ],
+  upload.single('image'), // Handle single image upload
   ExerciseController.createData
 );
 
