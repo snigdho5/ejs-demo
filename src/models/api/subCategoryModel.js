@@ -4,10 +4,13 @@ const model = mongoose.Schema({
   category_id: {
     type: String,
     required: true,
+    index: true,
   },
   name: {
     type: String,
     required: true,
+    unique: true,
+    index: true,
   },
   description: {
     type: String,

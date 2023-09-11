@@ -4,6 +4,7 @@ const model = mongoose.Schema({
   category_id: {
     type: String,
     required: true,
+    index: true,
   },
   sub_category_ids: {
     type: String,
@@ -16,6 +17,8 @@ const model = mongoose.Schema({
   name: {
     type: String,
     required: true,
+    unique: true,
+    index: true,
   },
   description: {
     type: String,

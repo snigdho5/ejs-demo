@@ -196,10 +196,12 @@ exports.updateData = async function (req, res, next) {
       year: moment().format("YYYY"),
       message: "Validation error!",
       requrl: req.app.locals.requrl,
-      respdata: errors.array(),
+      respdata: {},
     });
   }
 
+  const cat_id = mongoose.Types.ObjectId(req.body.cat_id);
+  // console.log(cat_id);
   Category.findOne({ name: req.body.focus_name }).then((category) => {
     if (category) {
       res.render("pages/body-focus/edit", {
@@ -216,105 +218,30 @@ exports.updateData = async function (req, res, next) {
         respdata: {},
       });
     } else {
-      var image_url = req.app.locals.requrl + "/public/images/no-image.jpg";
-      // console.log(image_url);
-
-      const newCat = Category({
+      var updData = {
         name: req.body.focus_name,
         description: req.body.description,
-        image: image_url,
-        added_dtime: dateTime,
-      });
-
-      newCat
-        .save()
-        .then((category) => {
-          res.render("pages/body-focus/edit", {
-            status: 0,
-            siteName: req.app.locals.siteName,
-            pageName: pageName,
-            pageTitle: pageTitle,
-            userFullName: req.session.user.name,
-            userImage: req.session.user.image_url,
-            userEmail: req.session.user.email,
-            year: moment().format("YYYY"),
-            message: "Added!",
-            requrl: req.app.locals.requrl,
-            respdata: category,
-          });
-        })
-        .catch((error) => {
-          res.render("pages/body-focus/edit", {
-            status: 0,
-            pageName: pageName,
-            siteName: req.app.locals.siteName,
-            userFullName: req.session.user.name,
-            userImage: req.session.user.image_url,
-            userEmail: req.session.user.email,
-            pageTitle: pageTitle,
-            year: moment().format("YYYY"),
-            requrl: req.app.locals.requrl,
-            message: "Error!",
-            respdata: error,
-          });
-        });
-    }
-  });
-};
-
-exports.updateData = async function (req, res, next) {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({
-      status: "0",
-      message: "Validation error!",
-      respdata: errors.array(),
-    });
-  }
-
-  Category.findOne({ _id: req.body.category_id }).then((category) => {
-    if (!category) {
-      res.status(404).json({
-        status: "0",
-        message: "Not found!",
-        respdata: {},
-      });
-    } else {
-      // Category.updateOne({ _id: category._id }, { $set: updData });
-      const requrl = url.format({
-        protocol: req.protocol,
-        host: req.get("host"),
-        // pathname: req.originalUrl,
-      });
-      var image_url = requrl + "/public/images/no-image.jpg";
-
-      var updData = {
-        name: req.body.category_name,
-        description: req.body.description,
-        image: image_url,
-        // last_login: dateTime,
+        // image: image_url,
       };
       Category.findOneAndUpdate(
-        { _id: req.body.category_id },
+        { _id: cat_id },
         { $set: updData },
         { upsert: true },
         function (err, doc) {
           if (err) {
             throw err;
           } else {
-            Category.findOne({ _id: req.body.category_id }).then((category) => {
-              res.status(200).json({
-                status: "1",
-                message: "Successfully updated!",
-                respdata: category,
-              });
-            });
+            res.redirect("/edit-body-focus/" + req.body.cat_id);
+            // Category.findOne({ _id: cat_id }).then((category) => {
+            //   //
+            // });
           }
         }
       );
     }
   });
 };
+
 
 exports.deleteData = async function (req, res, next) {
   // const errors = validationResult(req);

@@ -188,6 +188,11 @@ router.post(
   "/update-body-focus",
   cors(),
   [
+    check("cat_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
     check("focus_name", "This is a required field!")
       .not()
       .isEmpty()
@@ -253,25 +258,30 @@ router.post(
   ],
   SubFilterController.getSubFilterByBodyFocus
 );
-// router.get("/edit-sub-filter/:id", cors(), SubFilterController.editData);
+router.get("/edit-sub-filter/:id", cors(), SubFilterController.editData);
 
-// router.post(
-//   "/update-sub-filter",
-//   cors(),
-//   [
-//     check("focus_name", "This is a required field!")
-//     .not()
-//     .isEmpty()
-//     .trim()
-//     .escape(),
-//     check("description", "This is a required field!")
-//     .not()
-//     .isEmpty()
-//     .trim()
-//     .escape(),
-//   ],
-//   SubFilterController.updateData
-// );
+router.post(
+  "/update-sub-filter",
+  cors(),
+  [
+    check("edit_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("focus_name", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("description", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  SubFilterController.updateData
+);
 
 router.get(
   "/delete-sub-filter/:id",
@@ -304,6 +314,31 @@ router.post(
       .escape(),
   ],
   EquipmentController.createData
+);
+
+router.get("/edit-equipment/:id", cors(), EquipmentController.editData);
+
+router.post(
+  "/update-equipment",
+  cors(),
+  [
+    check("edit_id", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("equipment_name", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+    check("description", "This is a required field!")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape(),
+  ],
+  EquipmentController.updateData
 );
 
 router.get(

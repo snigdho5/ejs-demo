@@ -194,6 +194,98 @@ exports.getSubFilterByBodyFocus = async function (req, res, next) {
   );
 };
 
+
+exports.editData = async function (req, res, next) {
+  // Validate request parameters, queries using express-validator
+
+  var pageName = "Sub Filter";
+  var pageTitle = req.app.locals.siteName + " - Edit " + pageName;
+
+  const user_id = mongoose.Types.ObjectId(req.params.id);
+
+  SubCategory.findOne({ _id: user_id }).then((subCategory) => {
+    res.render("pages/sub-filter/edit", {
+      status: 1,
+      siteName: req.app.locals.siteName,
+      pageName: pageName,
+      pageTitle: pageTitle,
+      userFullName: req.session.user.name,
+      userImage: req.session.user.image_url,
+      userEmail: req.session.user.email,
+      year: moment().format("YYYY"),
+      requrl: req.app.locals.requrl,
+      message: "",
+      respdata: subCategory,
+    });
+  });
+};
+
+exports.updateData = async function (req, res, next) {
+  var pageName = "Sub Filter";
+  var pageTitle = req.app.locals.siteName + " - Edit " + pageName;
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.render("pages/sub-filter/edit", {
+      status: 0,
+      siteName: req.app.locals.siteName,
+      userFullName: req.session.user.name,
+      userImage: req.session.user.image_url,
+      userEmail: req.session.user.email,
+      pageName: pageName,
+      pageTitle: pageTitle,
+      year: moment().format("YYYY"),
+      message: "Validation error!",
+      requrl: req.app.locals.requrl,
+      respdata: errors.array(),
+    });
+  }
+
+  const edit_id = mongoose.Types.ObjectId(req.body.edit_id);
+  // console.log(edit_id);
+
+  SubCategory.findOne({ name: req.body.focus_name }).then((subCategory) => {
+    if (subCategory) {
+      res.render("pages/sub-filter/edit", {
+        status: 0,
+        siteName: req.app.locals.siteName,
+        userFullName: req.session.user.name,
+        userImage: req.session.user.image_url,
+        userEmail: req.session.user.email,
+        pageName: pageName,
+        pageTitle: pageTitle,
+        year: moment().format("YYYY"),
+        message: "Already exists!",
+        requrl: req.app.locals.requrl,
+        respdata: {},
+      });
+    } else {
+
+      var updData = {
+        // name: req.body.focus_name,
+        description: req.body.description,
+        // image: image_url,
+      };
+      SubCategory.findOneAndUpdate(
+        { _id: edit_id },
+        { $set: updData },
+        { upsert: true },
+        function (err, doc) {
+          if (err) {
+            throw err;
+          } else {
+            res.redirect("/edit-sub-filter/" + req.body.edit_id);
+            // SubCategory.findOne({ _id: edit_id }).then((subCategory) => {
+            //
+            // });
+          }
+        }
+      );
+    }
+  });
+
+};
+
 exports.deleteData = async function (req, res, next) {
   // const errors = validationResult(req);
   // if (!errors.isEmpty()) {

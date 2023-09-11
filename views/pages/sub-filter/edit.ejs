@@ -40,8 +40,8 @@
                             <form class="user" action="/update-body-focus" method="post">
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="hidden" class="form-control form-control-user" id="cat_id" name="cat_id" value="<%-respdata._id%>">
-                                        <input type="text" class="form-control form-control-user" id="focus_name" name="focus_name" placeholder="" value="<%-respdata.name%>" required>
+                                        <input type="hidden" class="form-control form-control-user" id="edit_id" name="edit_id" value="<%-respdata._id%>">
+                                        <input type="text" class="form-control form-control-user" id="focus_name" name="focus_name" placeholder="<%-respdata.name%>" disabled>
                                     </div>
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <textarea type="text" class="form-control form-control-user" id="description" name="description" placeholder="Description" required><%-respdata.description%></textarea>
